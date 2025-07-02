@@ -5,7 +5,7 @@
 @endif
 
 @if (session('error'))
-    <div style="color: red">
+    <div style="color: #E10000">
         {{ session('error') }}
     </div>
 @endif

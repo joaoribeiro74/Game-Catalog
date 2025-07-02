@@ -12,8 +12,13 @@ cd Game-Catalog
 
 2. Instale as dependências:
 ```bash
+npm install && npm run build
 composer install
-npm install && npm run dev
+```
+
+3. Criar a variáveis de ambiente:
+```
+.env
 ```
 
 ## ✨ Funcionalidades
