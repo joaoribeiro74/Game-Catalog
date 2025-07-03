@@ -5,19 +5,47 @@
 @endsection
 
 @section('content')
-    <a href="{{ route('games.create') }}">Criar</a>
+    <x-searchBar />
 
-    <ul>
-        @forelse($games as $game)
-            <li>
-                <a href="{{ route('games.detail', ['id' => $game['id']]) }}">
-                    {{ $game['title'] }}
-                </a>
-            </li>
+    <h1 class="mb-4 text-2xl font-bold font-grotesk">JOGOS</h1>
+
+    <div class="grid gap-4 grid-cols-4">
+        @forelse ($games as $game)
+            @include('components.gameCard', [
+                'image' => $game['image'],
+                'name' => $game['name'],
+                'price' => $game['price'],
+                'link' => route('games.detail', ['id' => $game['appid']]),
+                'size' => 'sm', // estilo quando md:grid-cols-4
+            ])
         @empty
-            <li>
-                Nenhum jogo cadastrado
-            </li>
+            <p>Nenhum jogo encontrado.</p>
         @endforelse
-    </ul>
+    </div>
+    <div class="mt-4 grid gap-4 grid-cols-2">
+        @forelse ($games as $game)
+            @include('components.gameCard', [
+                'image' => $game['image'],
+                'name' => $game['name'],
+                'price' => $game['price'],
+                'link' => route('games.detail', ['id' => $game['appid']]),
+                'size' => 'lg', // estilo quando md:grid-cols-2
+            ])
+        @empty
+            <p>Nenhum jogo encontrado.</p>
+        @endforelse
+    </div>
+    <div class="mt-4 grid gap-4 grid-cols-3">
+        @forelse ($games as $game)
+            @include('components.gameCard', [
+                'image' => $game['image'],
+                'name' => $game['name'],
+                'price' => $game['price'],
+                'link' => route('games.detail', ['id' => $game['appid']]),
+                'size' => 'md', // estilo para layout 3 colunas padrão
+            ])
+        @empty
+            <p>Nenhum jogo encontrado.</p>
+        @endforelse
+    </div>
 @endsection

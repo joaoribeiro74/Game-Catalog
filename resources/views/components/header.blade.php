@@ -1,18 +1,34 @@
-<header class="text-[#DCDEDF] body-font bg-[#171D25] shadow">
-  <div class="mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-    <a class="cursor-pointer flex title-font font-medium items-center">
-      <img class="w-auto h-12" src={{ asset('images/logo.png') }} alt="logo">
-    </a>
-    <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center font-bold">
-      <a class="mr-5 hover:text-[#1A9FFF]">First Link</a>
-      <a class="mr-5 hover:text-[#1A9FFF]">Second Link</a>
-      <a class="mr-5 hover:text-[#1A9FFF]">Third Link</a>
-      <a class="mr-5 hover:text-[#1A9FFF]">Fourth Link</a>
-    </nav>
-    <button class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-[#1A9FFF] rounded text-base mt-4 md:mt-0">Button
-      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
-        <path d="M5 12h14M12 5l7 7-7 7"></path>
-      </svg>
-    </button>
-  </div>
+<header class="body-font bg-white text-[#DCDEDF] shadow">
+    <div
+        class="{{ request()->routeIs('login') || request()->routeIs('register') ? 'justify-center' : 'flex-wrap md:flex-row justify-between' }} container mx-auto flex max-w-[940px] items-center justify-between py-5">
+
+        <a href="{{ auth()->check() ? route('games.index') : route('welcome') }}"
+            class="title-font flex cursor-pointer items-center font-medium">
+            <img class="h-12 w-auto" src="{{ asset('images/logotext.png') }}" alt="logo" />
+        </a>
+
+        @unless (request()->routeIs('login') || request()->routeIs('register'))
+            <nav class="font-grotesk mx-auto flex flex-wrap items-center justify-center text-base font-semibold md:ml-auto">
+                <a href="{{ route('games.mylist') }}" class="mr-5 text-[#100C1C] hover:text-[#1A9FFF]">Minha Lista</a>
+                <a href="#" class="mr-5 text-[#100C1C] hover:text-[#1A9FFF]">Avaliações</a>
+                <a href="#" class="mr-5 text-[#100C1C] hover:text-[#1A9FFF]">Perfil</a>
+            </nav>
+
+            @if (auth()->check())
+                <form action="{{ route('logout') }}" method="POST" class="ml-4">
+                    @csrf
+                    <button type="submit"
+                        class="font-grotesk mt-4 inline-flex cursor-pointer items-center rounded border-0 bg-gradient-to-r from-[#E10000] to-red-500 px-3 py-1 text-[10px] font-bold uppercase text-white hover:bg-red-600 focus:outline-none md:mt-0">
+                        Logout
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}"
+                    class="font-grotesk ml-4 mt-4 inline-flex cursor-pointer items-center rounded border-0 bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-3 py-1 text-[10px] font-bold uppercase focus:outline-none md:mt-0">
+                    Iniciar sessão
+                </a>
+            @endif
+        @endunless
+
+    </div>
 </header>
