@@ -20,8 +20,10 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['prefix' => 'games', 'middleware' => 'auth'], function () {
     Route::get('/', [GameController::class, 'index'])->name('games.index');
+    Route::get('/mylist', [GameController::class, 'mylist'])->name('games.mylist');
     Route::get('/create', [GameController::class, 'create'])->name('games.create');
     Route::get('/{id}', [GameController::class, 'detail'])->name('games.detail');
     Route::get('/{id}/edit', [GameController::class, 'edit'])->name('games.edit');
     Route::post('/{id}', [GameController::class, 'update'])->name('games.update');
+    Route::post('/games/{id}/rate', [GameController::class, 'rate'])->name('games.rate');
 });

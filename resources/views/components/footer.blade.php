@@ -1,8 +1,8 @@
 <footer class="w-full bg-[#08041c]">
-    <div class="mx-auto w-full max-w-screen-xl p-4 py-4">
+    <div class="mx-auto w-full max-w-[940px] p-4 py-4">
         <div class="flex justify-center">
             <div class="mb-6 md:mb-0">
-                <a href="{{ route('welcome') }}">
+                <a href="{{ auth()->check() ? route('games.index') : route('welcome') }}">
                     <div class="flex space-x-1">
                         <img class="h-10 w-auto" src="{{ asset('images/logotext-gray.png') }}" alt="logo" />
                     </div>
