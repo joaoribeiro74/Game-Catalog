@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Games;
 
 use App\Http\Controllers\Controller;
+use App\Models\GameListItem;
+use App\Models\Rating;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class GameController extends Controller
@@ -33,6 +36,15 @@ class GameController extends Controller
                     'image' => $info['header_image'] ?? null
                 ];
             }
+        }
+
+        $user = Auth::user();
+        $list = $user->gameLists()->where('name', 'Próximos Jogos')->first();
+        $listGameIds = $list ? $list->items()->pluck('game_id')->toArray() : [];
+
+        // Flag games in list
+        foreach ($games as &$game) {
+            $game['inList'] = in_array($game['appid'], $listGameIds);
         }
 
         return view('games.index', compact('games'));
@@ -71,7 +83,33 @@ class GameController extends Controller
                 'screenshots' => array_slice($info['screenshots'] ?? [], 0, 5),
             ];
 
-            return view('games.detail', compact('game'));
+            $user = Auth::user();
+
+            $userRating = 0;
+            $userLiked = false;
+
+            if ($user) {
+                $rating = Rating::where('user_id', $user->id)
+                    ->where('game_id', $game['appid'])
+                    ->first();
+
+                if ($rating) {
+                    $userRating = $rating->rating ?? 0;
+                    $userLiked = $rating->liked ?? false;
+                }
+
+                $list = $user->gameLists()->where('name', 'Próximos Jogos')->first();
+                $listGameIds = $list ? $list->items()->pluck('game_id')->toArray() : [];
+
+                $game['inList'] = in_array($game['appid'], $listGameIds);
+
+                $gameLists = $user->gameLists()->get();
+            } else {
+                $game['inList'] = false;
+                $gameLists = collect();
+            }
+
+            return view('games.detail', compact('game', 'gameLists', 'userRating', 'userLiked'));
         }
 
         return redirect()->route('games.index')->with('error', 'Jogo não encontrado.');
@@ -94,40 +132,76 @@ class GameController extends Controller
 
     public function update(Request $request)
     {
-        if (strlen($request->get("title")) == 0) {
-            return redirect()->back()->with('error', 'Erro ao realizar a operação!');
-        } else {
-            return redirect()->route('games.index')->with('success', 'Alteração realizada com sucesso!');
-        }
+        return redirect()->route('games.index');
     }
 
-    public function mylist()
+    public function myList()
     {
-        return view('games.mylist');
+        $user = Auth::user();
+        $gameLists = $user->gameLists()->with('items')->get();
+
+        foreach ($gameLists as $list) {
+            foreach ($list->items as $item) {
+                $response = Http::get("https://store.steampowered.com/api/appdetails", [
+                    'appids' => $item->game_id,
+                    'cc' => 'br',
+                    'l' => 'brazilian',
+                ]);
+
+                $data = $response->json();
+
+                if ($data && isset($data[$item->game_id]['success']) && $data[$item->game_id]['success']) {
+                    $info = $data[$item->game_id]['data'];
+
+                    // Adiciona os dados da API no item como uma propriedade dinâmica
+                    $item->game_data = [
+                        'name' => $info['name'],
+                        'image' => $info['header_image'] ?? null,
+                    ];
+                } else {
+                    $item->game_data = null;
+                }
+            }
+        }
+
+        return view('games.myList', compact('gameLists'));
     }
 
-    // public function rate(Request $request, string $id)
-    // {
-    //     $request->validate([
-    //         'rating' => 'required|numeric|min:0|max:5',
-    //         'liked' => 'boolean' // opcional, se enviado
-    //     ]);
+    public function toggleGame(Request $request)
+    {
+        $request->validate([
+            'game_id' => 'required|integer',
+        ]);
 
-    //     $user = auth()->user();
-    //     if (!$user) return response()->json(['error' => 'Unauthorized'], 401);
+        $user = Auth::user();
+        $gameId = $request->game_id;
 
-    //     // Salvar ou atualizar a nota
-    //     GameRating::updateOrCreate(
-    //         ['user_id' => $user->id, 'game_id' => $id],
-    //         ['rating' => $request->rating]
-    //     );
+        $list = $user->gameLists()->firstOrCreate(['name' => 'Próximos Jogos']);
 
-    //     // Salvar ou atualizar o like
-    //     GameLike::updateOrCreate(
-    //         ['user_id' => $user->id, 'game_id' => $id],
-    //         ['liked' => $request->input('liked', false)]
-    //     );
+        $exists = $list->items()->where('game_id', $gameId)->exists();
 
-    //     return response()->json(['success' => true]);
-    // }
+        if ($exists) {
+            $list->items()->where('game_id', $gameId)->delete();
+            $added = false;
+        } else {
+            $list->items()->create(['game_id' => $gameId]);
+            $added = true;
+        }
+
+        return response()->json(['success' => true, 'added' => $added]);
+    }
+
+    public function removeItem(GameListItem $item)
+    {
+        $user = Auth::user();
+
+        // Garante que o item pertence ao usuário
+        if ($item->gameList->user_id !== $user->id) {
+            abort(403);
+        }
+
+        $item->delete();
+
+        return redirect()->back()->with('success');
+    }
 }

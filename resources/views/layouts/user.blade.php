@@ -7,10 +7,9 @@
         <x-header />
 
         <main class="flex-1 container max-w-[940px] mx-auto pt-10">
+            <x-flash-private />
         @yield('content')
         </main>
-
-        <x-flash />
 
         <x-footer />
     </body>

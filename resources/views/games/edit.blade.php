@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('games.update', ['id' => $game['id']]) }}" method="POST">
+    <form action="" method="POST">
         @csrf
 
         <label for="title">Titulo</label>

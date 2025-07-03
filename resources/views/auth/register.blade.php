@@ -3,7 +3,7 @@
 @props(['action'])
 
 @section('content')
-    <div class="flex flex-col items-center justify-center">
+    <div class="flex flex-col items-center justify-center font-grotesk">
         <div class="w-full max-w-md">
             <h1 class="mb-4 text-left text-2xl font-bold text-white">CADASTRAR-SE</h1>
             <form action="{{ $action }}" method="POST">
