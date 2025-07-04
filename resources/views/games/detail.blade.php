@@ -103,8 +103,14 @@
                 </div>
             </div>
         </div>
-        <div x-data="ratingComponent({ rating: {{ $userRating ?? 0 }}, liked: {{ $userLiked ? 'true' : 'false' }} })"
+        <form x-data="ratingComponent({ rating: {{ $userRating ?? 0 }}, liked: {{ json_encode($userLiked ?? false) }} })" action="{{ route('games.rating.storeOrUpdate') }}" method="POST"
             class="mx-auto flex items-center justify-between space-x-4 rounded-xl bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] p-5 text-white shadow-md shadow-black">
+            @csrf
+
+            <!-- Inputs escondidos para enviar os dados -->
+            <input type="hidden" name="game_id" value="{{ $game['appid'] }}">
+            <input type="hidden" name="rating" :value="currentRating">
+            <input type="hidden" name="liked" :value="liked ? 1 : 0">
 
             <!-- Avaliação por estrelas -->
             <div class="flex items-center space-x-1">
@@ -114,7 +120,8 @@
                         <x-fas-star class="h-8 w-8 text-[#181c34]" />
 
                         <!-- Botão de clique (estrela inteira) -->
-                        <button class="absolute inset-0 z-10 h-full w-full" @click="toggleRating(i)"></button>
+                        <button type="button" class="absolute inset-0 z-10 h-full w-full"
+                            @click="toggleRating(i)"></button>
 
                         <!-- Estrela dinâmica por cima -->
                         <div class="absolute inset-0 flex items-center justify-center">
@@ -128,12 +135,13 @@
                     </div>
                 </template>
             </div>
+
             <div class="relative flex items-center space-x-16">
 
                 <div class="absolute -bottom-5 right-4 translate-y-1/2 rounded-sm bg-[#181c34] p-1">
-                    <button @click="submitRating()" :disabled="loading"
-                        class="font-grotesk cursor-pointer rounded bg-[#1DAA2D] px-8 py-2 font-bold uppercase text-white transition hover:bg-[#00c814]">
-                        Avaliar
+                    <button type="submit"
+                        class="font-grotesk cursor-pointer rounded bg-[#1DAA2D] px-8 py-2 font-bold uppercase text-white transition hover:bg-[#00c814] whitespace-nowrap">
+                        {{ $hasRated ? 'Avaliar novamente' : 'Avaliar' }}
                     </button>
                 </div>
 
@@ -142,7 +150,7 @@
                     <x-fas-heart class="h-8 w-8" fill="#181c34" />
 
                     <!-- Botão de clique -->
-                    <button class="absolute inset-0 z-10 h-full w-full" @click="liked = !liked"></button>
+                    <button type="button" class="absolute inset-0 z-10 h-full w-full" @click="liked = !liked"></button>
 
                     <!-- Coração colorido por cima, aparece se liked -->
                     <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -152,7 +160,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 @endsection
 
@@ -164,7 +172,6 @@
         return {
             currentRating: rating,
             liked: liked,
-            loading: false,
 
             toggleRating(index) {
                 if (this.currentRating >= index) {
@@ -173,51 +180,6 @@
                     this.currentRating = index - 1;
                 } else {
                     this.currentRating = index;
-                }
-            },
-
-            async submitRating() {
-                if (this.loading) return;
-
-                this.loading = true;
-                try {
-                    const tokenMeta = document.querySelector('meta[name="csrf-token"]');
-                    if (!tokenMeta) throw new Error("CSRF token não encontrado");
-
-                    const response = await fetch('/rating', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': tokenMeta.getAttribute('content'),
-                        },
-                        body: JSON.stringify({
-                            game_id: window
-                            .gameId, // certifique-se que essa variável existe no escopo global
-                            rating: this.currentRating,
-                            liked: this.liked,
-                        }),
-                    });
-
-                    if (!response.ok) throw new Error('Erro ao salvar avaliação');
-
-                    const data = await response.json();
-
-                    document.dispatchEvent(new CustomEvent('flash', {
-                        detail: {
-                            message: data.message,
-                            type: 'success'
-                        }
-                    }));
-
-                } catch (error) {
-                    document.dispatchEvent(new CustomEvent('flash', {
-                        detail: {
-                            message: error.message || 'Erro desconhecido',
-                            type: 'error'
-                        }
-                    }));
-                } finally {
-                    this.loading = false;
                 }
             },
         };

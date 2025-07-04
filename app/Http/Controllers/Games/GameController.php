@@ -109,7 +109,9 @@ class GameController extends Controller
                 $gameLists = collect();
             }
 
-            return view('games.detail', compact('game', 'gameLists', 'userRating', 'userLiked'));
+            $hasRated = $userRating > 0;
+
+            return view('games.detail', compact('game', 'gameLists', 'userRating', 'userLiked', 'hasRated'));
         }
 
         return redirect()->route('games.index')->with('error', 'Jogo não encontrado.');
@@ -202,6 +204,6 @@ class GameController extends Controller
 
         $item->delete();
 
-        return redirect()->back()->with('success');
+        return redirect()->back()->with('success', 'Jogo removido da lista com sucesso!');
     }
 }
