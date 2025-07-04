@@ -20,18 +20,21 @@
         <div class="flex gap-8">
             <div class="w-1/2">
                 <span class="my-6 block font-bold uppercase text-gray-400">Perfil</span>
-                <label for="email" class="block text-xs font-bold uppercase text-gray-400">NOME DE USUÁRIO</label>
-                <input type="text"
-                    class="mb-6 w-full rounded bg-[#24283F] px-3 py-2 text-white shadow-sm shadow-gray-900">
-                <label for="email" class="block text-xs font-bold uppercase text-gray-400">NOME DE EXIBIÇÃO</label>
-                <input type="text"
-                    class="mb-6 w-full rounded bg-[#24283F] px-3 py-2 text-white shadow-sm shadow-gray-900">
+                <label for="username" class="block text-xs font-bold uppercase text-gray-400">NOME DE USUÁRIO</label>
+                <input type="text" name="username" id="username" value="{{ old('username', auth()->user()->username) }}"
+                    class="mb-6 w-full rounded bg-[#24283F] px-3 py-2 text-gray-400 shadow-sm shadow-gray-900">
+
+                <label for="display_name" class="block text-xs font-bold uppercase text-gray-400">NOME DE EXIBIÇÃO</label>
+                <input type="text" name="display_name" id="display_name"
+                    value="{{ old('display_name', auth()->user()->display_name) }}"
+                    class="mb-6 w-full rounded bg-[#24283F] px-3 py-2 text-gray-400 shadow-sm shadow-gray-900">
+
                 <label for="email" class="block text-xs font-bold uppercase text-gray-400">E-MAIL</label>
-                <input type="text"
-                    class="mb-6 w-full rounded bg-[#24283F] px-3 py-2 text-white shadow-sm shadow-gray-900">
+                <input type="text" name="email" id="email" value="{{ old('email', auth()->user()->email) }}"
+                    class="mb-6 w-full rounded bg-[#24283F] px-3 py-2 text-gray-400 shadow-sm shadow-gray-900">
                 <div class="flex justify-center">
                     <button
-                        class="cursor-pointer mt-10 w-1/2 rounded bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-3 py-2 font-bold text-white shadow-sm shadow-gray-900">
+                        class="mt-10 w-1/2 cursor-pointer rounded bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-3 py-2 font-bold text-white shadow-sm shadow-gray-900">
                         SALVAR MUDANÇAS
                     </button>
                 </div>
@@ -49,7 +52,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                    class="cursor-pointer font-bold uppercase rounded bg-gradient-to-r from-red-500 to-[#E10000] shadow-sm shadow-black px-4 py-2 text-white">Remover
+                                    class="cursor-pointer rounded bg-gradient-to-r from-red-500 to-[#E10000] px-4 py-2 font-bold uppercase text-white shadow-sm shadow-black">Remover
                                     Avatar</button>
                             </form>
                         @else
@@ -59,7 +62,7 @@
                                 enctype="multipart/form-data" class="mt-2">
                                 @csrf
                                 <label for="file"
-                                    class="cursor-pointer rounded font-bold uppercase bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] shadow-sm shadow-black px-4 py-2 text-white">
+                                    class="cursor-pointer rounded bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-4 py-2 font-bold uppercase text-white shadow-sm shadow-black">
                                     Envie seu avatar
                                 </label>
                                 <input id="file" name="file" type="file" accept=".jpg,.jpeg,.png"

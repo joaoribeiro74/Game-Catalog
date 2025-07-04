@@ -35,4 +35,20 @@ class StoreAttachmentTest extends TestCase
             'filepath' => $file->hashName(),
         ]);
     }
+
+    public function test_upload_invalid_file_type_fails()
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $file = UploadedFile::fake()->create('document.pdf', 100); // pdf não permitido
+
+        $response = $this->post(route('profile.settings.store'), [
+            'file' => $file,
+        ]);
+
+        $response->assertSessionHasErrors('file');
+    }
 }
