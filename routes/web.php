@@ -5,6 +5,7 @@ use App\Http\Controllers\Games\GameController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Games\GameListController;
 use App\Http\Controllers\Games\RatingController;
+use App\Http\Controllers\User\AttachmentController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\ProfileSettingsController;
 use Illuminate\Support\Facades\Route;
@@ -66,4 +67,6 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
    Route::get('/profile/lists/{list}', [ProfileController::class, 'show'])->name('profile.lists.show');
    Route::get('/profile/settings/edit', [ProfileSettingsController::class, 'edit'])->name('profile.settings.edit');
    Route::get('/profile/settings/password', [ProfileSettingsController::class, 'password'])->name('profile.settings.password');
+   Route::post('/profile/settings/edit', [AttachmentController::class, 'store'])->name('profile.settings.store');
+   Route::delete('/profile/settings/edit', [AttachmentController::class, 'destroy'])->name('profile.settings.destroy');
 });

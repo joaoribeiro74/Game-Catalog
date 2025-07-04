@@ -31,7 +31,7 @@
                     class="mb-6 w-full rounded bg-[#24283F] px-3 py-2 text-white shadow-sm shadow-gray-900">
                 <div class="flex justify-center">
                     <button
-                        class="mt-10 w-1/2 rounded bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-3 py-2 font-bold text-white shadow-sm shadow-gray-900">
+                        class="cursor-pointer mt-10 w-1/2 rounded bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-3 py-2 font-bold text-white shadow-sm shadow-gray-900">
                         SALVAR MUDANÇAS
                     </button>
                 </div>
@@ -39,7 +39,35 @@
             <div class="w-1/2 bg-green-200 p-2">
                 <div class="flex flex-col items-center">
                     <span class="my-6 block font-bold uppercase text-gray-400">IMAGEM DE PERFIL</span>
-                    <x-fas-circle-user class="h-24 w-24" fill=#fff />
+                    <div class="flex flex-col items-center gap-4">
+
+                        @if (auth()->user()->attachment)
+                            <img src="{{ asset('storage/attachments/' . auth()->user()->attachment->filepath) }}"
+                                alt="Avatar" class="h-24 w-24 rounded-full" />
+
+                            <form action="{{ route('profile.settings.destroy') }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="cursor-pointer font-bold uppercase rounded bg-gradient-to-r from-red-500 to-[#E10000] shadow-sm shadow-black px-4 py-2 text-white">Remover
+                                    Avatar</button>
+                            </form>
+                        @else
+                            <x-fas-circle-user class="h-24 w-24" fill="#fff" />
+
+                            <form method="POST" action="{{ route('profile.settings.store') }}"
+                                enctype="multipart/form-data" class="mt-2">
+                                @csrf
+                                <label for="file"
+                                    class="cursor-pointer rounded font-bold uppercase bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] shadow-sm shadow-black px-4 py-2 text-white">
+                                    Envie seu avatar
+                                </label>
+                                <input id="file" name="file" type="file" accept=".jpg,.jpeg,.png"
+                                    onchange="this.form.submit()" class="hidden">
+                            </form>
+                        @endif
+
+                    </div>
                 </div>
                 <div class="flex flex-col">
                     <span class="mt-6 block font-bold uppercase text-gray-400">JOGOS FAVORITOS</span>
