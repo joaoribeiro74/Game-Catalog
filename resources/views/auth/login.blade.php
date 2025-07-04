@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('content')
-    <div class="mt-10 flex flex-col items-center justify-center">
+    <div class="mt-10 flex flex-col items-center justify-center font-grotesk">
         <div class="w-full max-w-md">
             <h1 class="mb-4 text-left text-2xl font-bold text-white">INICIAR SESSÃO</h1>
             <form action="{{ route('authenticate') }}" method="POST">

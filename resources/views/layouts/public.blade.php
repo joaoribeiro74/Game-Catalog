@@ -7,6 +7,7 @@
         <x-header />
 
         <main class="flex-1 container max-w-[940px] mx-auto pt-10">
+
         @yield('content')
         </main>
 

@@ -9,9 +9,9 @@
 
         @unless (request()->routeIs('login') || request()->routeIs('register'))
             <nav class="font-grotesk mx-auto flex flex-wrap items-center justify-center text-base font-semibold md:ml-auto">
-                <a href="{{ route('games.mylist') }}" class="mr-5 text-[#100C1C] hover:text-[#1A9FFF]">Minha Lista</a>
-                <a href="#" class="mr-5 text-[#100C1C] hover:text-[#1A9FFF]">Avaliações</a>
-                <a href="#" class="mr-5 text-[#100C1C] hover:text-[#1A9FFF]">Perfil</a>
+                <a href="{{ route('games.index') }}" class="mr-5 text-[#100C1C] hover:text-[#1A9FFF]">Início</a>
+                <a href="{{ route('games.myList') }}" class="mr-5 text-[#100C1C] hover:text-[#1A9FFF]">Minhas Listas</a>
+                <a href="{{ route('profile.index') }}" class="mr-5 text-[#100C1C] hover:text-[#1A9FFF]">Perfil</a>
             </nav>
 
             @if (auth()->check())

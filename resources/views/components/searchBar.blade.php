@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <a href="#" class="hover:text-[#04BCFC] hover:underline font-semibold">Quero jogar</a>
+        <a href="{{ route('games.myList') }}" class="hover:text-[#04BCFC] hover:underline font-semibold">Quero jogar</a>
     </div>
 
     <form action="" method="GET" class="relative flex w-full max-w-md items-center">
