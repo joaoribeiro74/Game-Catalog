@@ -30,7 +30,7 @@ class LoginController extends Controller
         }
 
         return back()
-            ->with('error', 'Email ou senha incorretos.')
+            ->with('error', 'Credenciais incorretas.')
             ->onlyInput('login');
     }
     public function logout(Request $request): RedirectResponse

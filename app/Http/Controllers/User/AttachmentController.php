@@ -12,29 +12,29 @@ class AttachmentController extends Controller
 {
     public function store(Request $request)
     {
-        $user = Auth::user(); // pega o usuário logado
+        $user = Auth::user();
 
         $request->validate([
-            'file' => 'required|file|mimes:jpg,png,jpeg|max:4096',
+            'file' => 'required|file|mimes:jpg,png,jpeg|max:2048',
         ]);
 
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-
-            $file->storeAs('attachments', $file->hashName(), 'public');
-
-            if ($user->attachment) {
-                $user->attachment->update(['filepath' => $file->hashName()]);
-            } else {
-                $user->attachment()->create([
-                    'filepath' => $file->hashName(),
-                ]);
-            }
-
-            return back()->with('success', 'Arquivo enviado com sucesso!');
+        if (!$request->hasFile('file')) {
+            return back()->withErrors(['file' => 'Nenhum arquivo enviado.']);
         }
 
-        return back()->withErrors('Nenhum arquivo enviado.');
+        $file = $request->file('file');
+
+        $filename = $file->hashName();
+
+        $path = 'attachments/' . $filename;
+
+        $file->storeAs('attachments', $filename, 'public');
+
+        $user->attachment()->updateOrCreate([], [
+            'filepath' => $path,
+        ]);
+        
+        return back()->with('success', 'Arquivo enviado com sucesso!');
     }
 
     public function destroy()
@@ -42,7 +42,7 @@ class AttachmentController extends Controller
         $user = Auth::user();
 
         if ($user->attachment) {
-            Storage::disk('public')->delete('attachments/' . $user->attachment->filepath);
+            Storage::disk('public')->delete($user->attachment->filepath);
 
             $user->attachment->delete();
 

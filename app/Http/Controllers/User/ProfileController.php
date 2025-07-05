@@ -20,13 +20,15 @@ class ProfileController extends Controller
         $gamesThisYear = $user->ratings()
             ->whereYear('created_at', now()->year)
             ->count();
-        $ratings = $this->getRatedGames($user)->take(4);
+        $ratings = $this->getRatedGames($user)
+            ->sortByDesc('updated_at')
+            ->take(6);
 
         $scores = ['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0'];
         $ratingsCount = array_fill_keys($scores, 0);
 
         foreach ($user->ratings as $rating) {
-            $score = number_format((float) $rating->rating, 1); // força para string tipo "3.5"
+            $score = number_format((float) $rating->rating, 1);
 
             if (array_key_exists($score, $ratingsCount)) {
                 $ratingsCount[$score]++;
@@ -41,7 +43,8 @@ class ProfileController extends Controller
     public function games(Request $request)
     {
         $user = $request->user();
-        $ratings = $this->getRatedGames($user);
+        $ratings = $this->getRatedGames($user)
+            ->sortByDesc('updated_at');
 
         return view('profile.games', compact('user', 'ratings'));
     }
@@ -100,6 +103,7 @@ class ProfileController extends Controller
                 'name' => $game['name'] ?? 'Desconhecido',
                 'image' => $game['image'] ?? null,
                 'rating' => $rating->rating,
+                'updated_at' => $rating->updated_at,
                 'liked' => $rating->liked,
                 'date' => $createdAt->format('d M'),
                 'year' => $createdAt->year !== now()->year ? $createdAt->year : null,
@@ -111,17 +115,13 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // Pega as listas do usuário com os jogos (itens) que não estão vazios
         $lists = $user->gameLists()->with('items')->get()
             ->filter(fn($list) => $list->items->isNotEmpty())
             ->values();
 
-        // Para cada lista, busca os dados completos dos jogos via API
         foreach ($lists as $list) {
-            // Pega os IDs dos jogos na lista (ajuste 'game_id' para seu campo correto)
             $gameIds = $list->items->pluck('game_id')->toArray();
 
-            // Busca os dados dos jogos pela API e guarda na propriedade games da lista
             $list->games = collect($this->fetchGamesFromApi($gameIds));
         }
 
@@ -136,7 +136,6 @@ class ProfileController extends Controller
 
         $games = $this->fetchGamesFromApi($gameApiIds);
 
-        // Associa os dados da API a cada item da lista:
         foreach ($list->items as $item) {
             $item->game_data = $games[$item->game_id] ?? null;
         }

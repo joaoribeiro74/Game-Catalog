@@ -49,7 +49,7 @@
                         </div>
 
                         {{-- Miniaturas --}}
-                        <div class="grid grid-cols-5 gap-2">
+                        <div class="grid grid-cols-5 gap-2 mb-10">
                             @foreach ($game['screenshots'] as $shot)
                                 <img src="{{ $shot['path_thumbnail'] }}" alt="Miniatura"
                                     class="cursor-pointer transition hover:scale-105"

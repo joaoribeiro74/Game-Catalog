@@ -20,6 +20,8 @@ class RegisterController extends Controller
             'email' => 'required|email:rfc,dns|unique:users,email',
             'username' => 'required|string|min:4|max:32|regex:/^[a-zA-Z0-9_-]+$/|unique:users,username',
             'password' => 'required|string|min:8|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/|confirmed',
+        ], [
+            'password.regex' => 'A senha deve conter pelo menos uma letra maiúscula, um número e um caractere especial.',
         ]);
 
         User::create([
