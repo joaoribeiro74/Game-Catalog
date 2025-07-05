@@ -26,7 +26,6 @@
                         <input type="password" name="password" id="password"
                             class="w-full rounded bg-[#24283F] px-3 py-2 pr-10 text-white shadow-sm shadow-gray-900">
 
-                        <!-- Botão do olho -->
                         <button type="button" onclick="togglePassword()"
                             class="absolute right-3 flex -translate-y-[30px] items-center text-white hover:text-[#04BCFC] focus:outline-none">
                             <span id="eye-icon-show" class="block">
@@ -58,6 +57,7 @@
     </div>
 @endsection
 
+@push('scripts')
 <script>
     function togglePassword() {
         const input = document.getElementById('password');
@@ -75,3 +75,4 @@
         }
     }
 </script>
+@endpush

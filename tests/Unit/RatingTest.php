@@ -26,11 +26,10 @@ class RatingTest extends TestCase
 
         $user = User::factory()->create();
 
-        // Tentar criar um rating inválido (rating = 0)
         Rating::create([
             'user_id' => $user->id,
             'game_id' => 123456,
-            'rating' => 0, // inválido
+            'rating' => 0,
             'liked' => true,
             'review' => 'Test review',
             'reviewed_at' => now(),

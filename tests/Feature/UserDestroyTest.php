@@ -26,7 +26,7 @@ class UserDestroyTest extends TestCase
         $user->refresh();
         $attachment = $user->attachment;
 
-        Storage::disk('public')->assertExists('attachments/' . $file->hashName());
+        Storage::disk('public')->assertExists($attachment->filepath);
 
         $attachment = $user->attachment;
         $response = $this->delete(route('profile.settings.destroy', $attachment->id));
@@ -34,7 +34,7 @@ class UserDestroyTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
 
-        Storage::disk('public')->assertMissing('attachments/' . $file->hashName());
+        Storage::disk('public')->assertMissing($attachment->filepath);
 
         $this->assertDatabaseMissing('attachments', ['id' => $attachment->id]);
     }
@@ -53,10 +53,10 @@ class UserDestroyTest extends TestCase
 
         $attachment = $user->attachment;
 
-        Storage::disk('public')->assertExists('attachments/' . $attachment->filepath);
+        Storage::disk('public')->assertExists($attachment->filepath);
 
         $attachment->delete();
 
-        Storage::disk('public')->assertMissing('attachments/' . $attachment->filepath);
+        Storage::disk('public')->assertMissing($attachment->filepath);
     }
 }

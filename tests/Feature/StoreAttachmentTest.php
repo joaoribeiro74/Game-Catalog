@@ -32,7 +32,7 @@ class StoreAttachmentTest extends TestCase
 
         $this->assertDatabaseHas('attachments', [
             'user_id' => $user->id,
-            'filepath' => $file->hashName(),
+            'filepath' => 'attachments/' . $file->hashName(),
         ]);
     }
 
@@ -43,7 +43,7 @@ class StoreAttachmentTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $file = UploadedFile::fake()->create('document.pdf', 100); // pdf não permitido
+        $file = UploadedFile::fake()->create('document.pdf', 100);
 
         $response = $this->post(route('profile.settings.store'), [
             'file' => $file,

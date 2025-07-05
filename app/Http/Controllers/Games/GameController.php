@@ -53,12 +53,6 @@ class GameController extends Controller
 
         return view('games.index', compact('games'));
     }
-
-    public function create()
-    {
-        return view('games.create');
-    }
-
     public function detail(string $id)
     {
         $response = Http::get("https://store.steampowered.com/api/appdetails", [

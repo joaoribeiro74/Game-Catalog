@@ -39,19 +39,16 @@
                         <h4 class="text-2xl text-white">{{ $list->name }}</h4>
 
                         <div x-data="{ editOpen: false, deleteOpen: false, editName: '{{ $list->name }}' }" class="flex items-center gap-4">
-                            <!-- Botão Editar (abre modal) -->
                             <button @click="editOpen = true"
                                 class="cursor-pointer text-white transition hover:text-blue-400" title="Editar lista">
                                 <x-fas-edit class="h-5 w-5" />
                             </button>
 
-                            <!-- Botão Excluir (abre modal) -->
                             <button @click="deleteOpen = true"
                                 class="cursor-pointer text-[#E10000] transition hover:text-red-500" title="Excluir lista">
                                 <x-fas-trash class="h-5 w-5" />
                             </button>
 
-                            <!-- Modal Editar Nome -->
                             <div x-show="editOpen" x-transition x-cloak @keydown.escape.window="editOpen = false"
                                 class="fixed inset-0 z-50 flex items-center justify-center"
                                 style="background-color: rgba(91, 112, 131, 0.4);">
@@ -74,7 +71,6 @@
                                 </div>
                             </div>
 
-                            <!-- Modal Confirmar Exclusão -->
                             <div x-show="deleteOpen" x-transition x-cloak @keydown.escape.window="deleteOpen = false"
                                 class="fixed inset-0 z-50 flex items-center justify-center"
                                 style="background-color: rgba(91, 112, 131, 0.4);">

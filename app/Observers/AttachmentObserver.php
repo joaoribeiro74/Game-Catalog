@@ -9,7 +9,7 @@ class AttachmentObserver
 {
     public function deleted(Attachment $attachment)
     {
-        Storage::disk('public')->delete('attachments/' . $attachment->filepath);
+        Storage::disk('public')->delete($attachment->filepath);
 
         // $filePath = public_path('storage/attachments/' . $attachment->filepath);
 

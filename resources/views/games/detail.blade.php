@@ -43,12 +43,10 @@
                 </div>
                 @if (!empty($game['screenshots']))
                     <div class="w-full md:w-2/3" x-data="{ mainImage: '{{ $game['screenshots'][0]['path_full'] }}' }">
-                        {{-- Imagem principal --}}
                         <div class="mb-4">
                             <img :src="mainImage" alt="Screenshot principal" class="w-full shadow-lg">
                         </div>
 
-                        {{-- Miniaturas --}}
                         <div class="grid grid-cols-5 gap-2 mb-10">
                             @foreach ($game['screenshots'] as $shot)
                                 <img src="{{ $shot['path_thumbnail'] }}" alt="Miniatura"
@@ -107,23 +105,18 @@
             class="mx-auto flex items-center justify-between space-x-4 rounded-xl bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] p-5 text-white shadow-md shadow-black">
             @csrf
 
-            <!-- Inputs escondidos para enviar os dados -->
             <input type="hidden" name="game_id" value="{{ $game['appid'] }}">
             <input type="hidden" name="rating" :value="currentRating">
             <input type="hidden" name="liked" :value="liked ? 1 : 0">
 
-            <!-- Avaliação por estrelas -->
             <div class="flex items-center space-x-1">
                 <template x-for="i in 5" :key="i">
                     <div class="relative h-8 w-8">
-                        <!-- Fundo escuro sempre visível -->
                         <x-fas-star class="h-8 w-8 text-[#181c34]" />
 
-                        <!-- Botão de clique (estrela inteira) -->
                         <button type="button" class="absolute inset-0 z-10 h-full w-full"
                             @click="toggleRating(i)"></button>
 
-                        <!-- Estrela dinâmica por cima -->
                         <div class="absolute inset-0 flex items-center justify-center">
                             <template x-if="currentRating >= i">
                                 <x-fas-star class="h-8 w-8 text-white" />
@@ -146,13 +139,10 @@
                 </div>
 
                 <div class="relative h-8 w-8">
-                    <!-- Fundo escuro sempre visível -->
                     <x-fas-heart class="h-8 w-8" fill="#181c34" />
 
-                    <!-- Botão de clique -->
                     <button type="button" class="absolute inset-0 z-10 h-full w-full" @click="liked = !liked"></button>
 
-                    <!-- Coração colorido por cima, aparece se liked -->
                     <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
                         <template x-if="liked">
                             <x-fas-heart class="h-8 w-8" fill="#E10000" />
@@ -164,6 +154,7 @@
     </div>
 @endsection
 
+@push('scripts')
 <script>
     function ratingComponent({
         rating = 0,
@@ -210,7 +201,6 @@
                         this.inList = data.added;
 
                         if (this.inList) {
-                            // Redireciona para a página mylist só quando adiciona
                             window.location.href = '{{ route('games.myList') }}';
                         }
                     } else {
@@ -224,3 +214,4 @@
         }
     }
 </script>
+@endpush

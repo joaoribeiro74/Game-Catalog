@@ -95,7 +95,6 @@
                     </div>
                 @endforeach
 
-                {{-- Estrelas finais --}}
                 <span class="flex flex-row items-center justify-end">
                     <x-fas-star class="h-3 w-3 text-gray-400" />
                     <x-fas-star class="h-3 w-3 text-gray-400" />

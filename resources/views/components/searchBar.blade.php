@@ -42,7 +42,7 @@
                     }
 
                     fetch(`/games/search/suggest?q=${encodeURIComponent(this.query)}`, {
-                            credentials: 'same-origin' // enviar cookie de sessão para autenticação
+                            credentials: 'same-origin' 
                         })
                         .then(res => res.json())
                         .then(data => {

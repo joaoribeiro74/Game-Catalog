@@ -14,7 +14,6 @@
         </div>
     </li>
 
-    <!-- Modal -->
     <div x-show="open" x-transition x-cloak @keydown.escape.window="open = false"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <div class="w-full max-w-md rounded-lg bg-[#181c34] p-6 uppercase text-white shadow-lg font-grotesk font-bold">

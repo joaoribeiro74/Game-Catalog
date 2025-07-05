@@ -40,7 +40,6 @@
                         <input type="password" name="password" id="password"
                             class="w-full rounded bg-[#24283F] px-3 py-2 pr-10 text-white shadow-sm shadow-gray-900">
 
-                        <!-- Botão do olho -->
                         <button type="button"
                             onclick="togglePassword('password', 'eye-icon-show-password', 'eye-icon-hide-password')"
                             class="absolute right-3 flex -translate-y-[30px] items-center text-white hover:text-[#04BCFC] focus:outline-none">
@@ -67,7 +66,6 @@
                         <input type="password" name="password_confirmation" id="password_confirmation"
                             class="w-full rounded bg-[#24283F] px-3 py-2 pr-10 text-white shadow-sm shadow-gray-900">
 
-                        <!-- Botão do olho -->
                         <button type="button"
                             onclick="togglePassword('password_confirmation', 'eye-icon-show-confirm', 'eye-icon-hide-confirm')"
                             class="absolute right-3 flex -translate-y-[30px] items-center text-white hover:text-[#04BCFC] focus:outline-none">
@@ -102,6 +100,7 @@
     </div>
 @endsection
 
+@push('scripts')
 <script>
     function togglePassword(inputId, showIconId, hideIconId) {
         const input = document.getElementById(inputId);
@@ -119,3 +118,4 @@
         }
     }
 </script>
+@endpush

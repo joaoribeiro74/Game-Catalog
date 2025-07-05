@@ -46,6 +46,8 @@ class ProfileSettingsController extends Controller
     {
         $user = Auth::user();
 
+        // dd($request->file('file'));
+
         $rules = [
             'username' => [
                 'sometimes',
@@ -69,7 +71,7 @@ class ProfileSettingsController extends Controller
             'file' => ['sometimes', 'nullable', 'image', 'mimes:jpg,png,jpeg', 'max:2048'],
         ];
 
-        if ($request->email !== $user->email) {
+        if ($request->filled('email') && $request->email !== $user->email) {
             $rules['current_password'] = [
                 'required',
                 function ($attribute, $value, $fail) use ($user) {
@@ -79,6 +81,7 @@ class ProfileSettingsController extends Controller
                 },
             ];
         }
+
 
         $messages = [
             'username.regex' => 'O nome de usuário só pode conter letras, números, traços e underline.',
