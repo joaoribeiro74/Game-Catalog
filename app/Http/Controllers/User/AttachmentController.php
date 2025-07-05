@@ -37,7 +37,7 @@ class AttachmentController extends Controller
         return back()->with('success', 'Arquivo enviado com sucesso!');
     }
 
-    public function destroy()
+    public function destroy(Request $request)
     {
         $user = Auth::user();
 

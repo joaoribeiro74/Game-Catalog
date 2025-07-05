@@ -119,26 +119,44 @@ class ProfileSettingsController extends Controller
             $user->email = $request->email;
             $changed = true;
         }
-        $file = $request->file('file');
 
-        if ($file && $file->isValid()) {
-            $filename = $file->hashName();
-            $path = 'attachments/' . $filename;
+        $base64 = $request->input('resizedImage');
 
-            $file->storeAs('attachments', $filename, 'public');
+        if ($base64) {
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64, $matches)) {
+                $type = strtolower($matches[1]);
+                if (!in_array($type, ['jpg', 'jpeg', 'png'])) {
+                    return back()->withErrors(['file' => 'Formato de imagem inválido']);
+                }
 
-            $oldAttachment = $user->attachment;
+                $base64 = substr($base64, strpos($base64, ',') + 1);
+                $base64 = str_replace(' ', '+', $base64);
+                $imageData = base64_decode($base64);
 
-            $user->attachment()->updateOrCreate(
-                ['user_id' => $user->id],
-                ['filepath' => $path]
-            );
+                if ($imageData === false) {
+                    return back()->withErrors(['file' => 'Imagem base64 inválida']);
+                }
 
-            if ($oldAttachment && Storage::disk('public')->exists($oldAttachment->filepath)) {
-                Storage::disk('public')->delete($oldAttachment->filepath);
+                $filename = uniqid('avatar_') . '.' . $type;
+                $path = 'attachments/' . $filename;
+
+                Storage::disk('public')->put($path, $imageData);
+
+                $oldAttachment = $user->attachment;
+
+                $user->attachment()->updateOrCreate(
+                    ['user_id' => $user->id],
+                    ['filepath' => $path]
+                );
+
+                if ($oldAttachment && Storage::disk('public')->exists($oldAttachment->filepath)) {
+                    Storage::disk('public')->delete($oldAttachment->filepath);
+                }
+
+                $changed = true;
+            } else {
+                return back()->withErrors(['file' => 'Formato da imagem inválido']);
             }
-
-            $changed = true;
         }
 
 
