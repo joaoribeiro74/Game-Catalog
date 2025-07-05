@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -24,6 +25,7 @@ class User extends Authenticatable
         'password',
         'display_name',
         'avatar',
+        'username_changed_at',
     ];
 
     /**
@@ -44,6 +46,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'username_changed_at' => 'datetime',
     ];
 
     protected static function booted(): void
@@ -63,5 +66,10 @@ class User extends Authenticatable
     public function ratings(): HasMany
     {
         return $this->hasMany(Rating::class);
+    }
+
+    public function attachment(): HasOne
+    {
+        return $this->hasOne(Attachment::class);
     }
 }

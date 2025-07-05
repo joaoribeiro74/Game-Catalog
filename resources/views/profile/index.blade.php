@@ -3,8 +3,13 @@
 @section('content')
     <div class="font-grotesk flex items-center justify-between">
         <div class="flex flex-row items-center justify-center gap-8">
-            <x-fas-circle-user class="h-24 w-24" fill=#fff />
-            <p class="font-grotesk text-2xl">{{ $user->username }}</p>
+            <x-fas-circle-user class="h-24 w-24" fill="#fff" />
+            <div class="flex flex-col justify-center text-start gap-1">
+                @if (!empty($user->display_name))
+                    <p class="font-grotesk text-xl font-semibold">{{ $user->display_name }}</p>
+                @endif
+                <p class="font-grotesk text-md">{{ $user->username }}</p>
+            </div>
             <div class="rounded bg-[#181c34] px-3 py-1 text-xs font-bold uppercase">
                 <a href="{{ route('profile.settings.edit') }}">
                     EDITAR PERFIL
@@ -27,32 +32,19 @@
     <x-profileHeader />
     <div class="font-grotesk mt-10 flex gap-8">
         <div class="w-2/3">
-            <span>JOGOS FAVORITOS</span>
-            <div class="border-b-1 mb-2 border-gray-400 opacity-30"></div>
-            <div class="mb-8 grid grid-cols-3 gap-4">
-                <div class="flex justify-center border-2 border-transparent bg-[#383c54] px-4 py-16 hover:border-white">
-                    <x-fas-plus-circle class="h-8 w-8" fill=#181c34 />
-                </div>
-                <div class="flex justify-center border-2 border-transparent bg-[#383c54] px-4 py-16 hover:border-white">
-                    <x-fas-plus-circle class="h-8 w-8" fill=#181c34 />
-                </div>
-                <div class="flex justify-center border-2 border-transparent bg-[#383c54] px-4 py-16 hover:border-white">
-                    <x-fas-plus-circle class="h-8 w-8" fill=#181c34 />
-                </div>
-            </div>
             <div class="flex items-center justify-between">
                 <span>ATIVIDADE</span>
                 <a class="text-xs hover:underline" href="{{ route('profile.games') }}">VER TUDO</a>
             </div>
             <div class="border-b-1 mb-2 border-gray-400 opacity-30"></div>
-            <div class="grid grid-cols-4 gap-4">
-                @foreach ($ratings as $game)
+            <div class="grid grid-cols-3 gap-4">
+                @foreach ($ratings->take(6) as $game)
                     <div class="flex flex-col items-start">
                         <a href="{{ route('games.detail', $game->id) }}">
                             <img src="{{ $game->image }}" alt="{{ $game->name }}"
                                 class="h-auto w-full border-2 border-transparent transition hover:scale-105 hover:border-white" />
                         </a>
-                        <div class="mt-1 flex flex-row items-center justify-start">
+                        <div class="mt-1 flex flex-row items-center justify-start gap-2">
                             <x-ratingStars :score="$game->rating" />
 
                             @if ($game->liked)
@@ -66,15 +58,14 @@
         <aside class="w-1/3">
             <div class="flex items-center justify-between py-1">
                 <span class="text-xs">AVALIAÇÕES</span>
-                <a class="text-xs hover:underline" href="#">{{ $gamesTotal }}</a>
+                <a class="text-xs hover:underline" href="{{ route('profile.games') }}">{{ $gamesTotal }}</a>
             </div>
             <div class="border-b-1 mb-4 border-gray-400 opacity-30"></div>
             <div class="relative mt-8 flex h-[60px] flex-row items-end justify-center gap-1">
-                {{-- Ícone inicial --}}
+
                 <span class="flex flex-col items-center justify-end">
                     <x-fas-star class="h-3 w-3 text-gray-400" />
                 </span>
-                {{-- Barras --}}
                 @foreach (['0.5', '1.0', '1.5', '2.0', '2.5', '3.0', '3.5', '4.0', '4.5', '5.0'] as $score)
                     @php
                         $count = $ratingsCount[$score] ?? 0;
@@ -83,12 +74,10 @@
                     @endphp
 
                     <div class="group relative flex flex-col items-center">
-                        {{-- Barra --}}
                         <div class="w-[15px] rounded-t-[2px] bg-gray-300 transition-all group-hover:bg-gray-400"
                             style="height: calc(60px * {{ $heightPercent / 100 }})">
                         </div>
 
-                        {{-- Tooltip estilizado --}}
                         @if ($count > 0)
                             <div
                                 class="absolute -top-7 z-10 hidden w-max items-center whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white group-hover:flex">

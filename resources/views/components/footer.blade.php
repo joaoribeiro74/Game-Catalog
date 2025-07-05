@@ -1,4 +1,4 @@
-<footer class="w-full bg-[#08041c]">
+<footer class="w-full bg-[#08041c] mt-4">
     <div class="mx-auto w-full max-w-[940px] p-4 py-4">
         <div class="flex justify-center">
             <div class="mb-6 md:mb-0">

@@ -51,6 +51,7 @@
                                 <x-fas-eye-slash class="h-5 w-5" />
                             </span>
                         </button>
+                        <span class="text-[10px] font-semibold text-gray-400">- Senha com mínimo 8 caracteres, incluindo 1 maiúscula, 1 número e 1 caractere especial.</span>
 
                         <div class="min-h-[8px]">
                             @error('password')

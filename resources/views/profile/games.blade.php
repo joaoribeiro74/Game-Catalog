@@ -2,8 +2,8 @@
 
 @section('content')
     <x-profileHeader />
-    <div x-data="{ columns: 6 }" class="font-grotesk flex items-center justify-between">
-        <div class="mt-10 flex flex-col">
+    <div x-data="{ columns: 6 }" class="font-grotesk">
+        <div class="mt-10">
             <div class="flex items-center justify-between">
                 <span>ATIVIDADE</span>
                 <div class="flex flex-row gap-1">
@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="border-b-1 mb-2 border-gray-400 opacity-30"></div>
-            <div :class="`grid gap-4 grid-cols-${columns}`">
+            <div x-bind:class="`grid gap-4 ${columns === 6 ? 'grid-cols-6' : 'grid-cols-4'}`">
                 @foreach ($ratings as $game)
                     <div class="flex flex-col items-start">
                         <a href="{{ route('games.detail', $game->id) }}">

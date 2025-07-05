@@ -32,7 +32,7 @@
     <img src="{{ $image }}" alt="{{ $name }}" class="w-full object-cover rounded-t {{ $imageSize }}">
 
     <div class="p-4 flex flex-col justify-between gap-2">
-        <h2 class="font-grotesk font-bold uppercase text-white {{ $titleSize }}">{{ $name }}</h2>
+        <h2 class="font-grotesk font-bold uppercase text-white whitespace-nowrap overflow-hidden overflow-ellipsis {{ $titleSize }}">{{ $name }}</h2>
         <div class="flex justify-between items-center">
             <p class="font-grotesk font-semibold uppercase bg-[#08041c] text-gray-400 whitespace-nowrap {{ $priceSize }}">{{ $price }}</p>
             <a href="{{ $link }}" class="font-grotesk font-semibold uppercase text-white bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] rounded hover:underline {{ $buttonSize }}">

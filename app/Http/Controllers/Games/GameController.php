@@ -7,42 +7,46 @@ use App\Models\GameListItem;
 use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class GameController extends Controller
 {
     public function index()
     {
-        $appIds = [730, 570, 2246340, 221100]; // Ex: CS2, Dota 2, TF2, PUBG
-        $games = [];
+        $games = Cache::remember('steam_games_data', 3600, function () {
+            $appIds = [2246340, 221100, 1174180, 1850570, 377160, 1245620, 1091500, 292030, 3240220, 2669320, 108600, 2651280, 1172620, 648800, 1238840, 2933620, 3159330, 359550, 1086940, 381210, 990080, 1593500, 1888930, 1627720, 1903340, 2050650, 2344520, 489830];
+            $games = [];
 
-        foreach ($appIds as $appid) {
-            $response = Http::get("https://store.steampowered.com/api/appdetails", [
-                'appids' => $appid,
-                'cc' => 'br',
-                'l' => 'brazilian'
-            ]);
+            foreach ($appIds as $appid) {
+                $response = Http::get("https://store.steampowered.com/api/appdetails", [
+                    'appids' => $appid,
+                    'cc' => 'br',
+                    'l' => 'brazilian'
+                ]);
 
-            $data = $response->json();
-            if ($data && isset($data[$appid]['success']) && $data[$appid]['success']) {
-                $info = $data[$appid]['data'];
+                $data = $response->json();
+                if ($data && isset($data[$appid]['success']) && $data[$appid]['success']) {
+                    $info = $data[$appid]['data'];
 
-                $games[] = [
-                    'appid' => $info['steam_appid'],
-                    'name' => $info['name'],
-                    'price' => $info['is_free'] ? 'Gratuito' : (
-                        $info['price_overview']['final_formatted'] ?? 'Indisponível'
-                    ),
-                    'image' => $info['header_image'] ?? null
-                ];
+                    $games[] = [
+                        'appid' => $info['steam_appid'],
+                        'name' => $info['name'],
+                        'price' => $info['is_free'] ? 'Gratuito' : (
+                            $info['price_overview']['final_formatted'] ?? 'Indisponível'
+                        ),
+                        'image' => $info['header_image'] ?? null
+                    ];
+                }
             }
-        }
+
+            return $games;
+        });
 
         $user = Auth::user();
         $list = $user->gameLists()->where('name', 'Próximos Jogos')->first();
         $listGameIds = $list ? $list->items()->pluck('game_id')->toArray() : [];
 
-        // Flag games in list
         foreach ($games as &$game) {
             $game['inList'] = in_array($game['appid'], $listGameIds);
         }
