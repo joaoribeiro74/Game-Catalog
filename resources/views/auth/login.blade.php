@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('content')
-    <div class="mt-10 flex flex-col items-center justify-center font-grotesk">
+    <div class="font-grotesk mt-10 flex flex-col items-center justify-center">
         <div class="w-full max-w-md">
             <h1 class="mb-4 text-left text-2xl font-bold text-white">INICIAR SESSÃO</h1>
             <form action="{{ route('authenticate') }}" method="POST">
@@ -58,21 +58,21 @@
 @endsection
 
 @push('scripts')
-<script>
-    function togglePassword() {
-        const input = document.getElementById('password');
-        const eyeShow = document.getElementById('eye-icon-show');
-        const eyeHide = document.getElementById('eye-icon-hide');
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const eyeShow = document.getElementById('eye-icon-show');
+            const eyeHide = document.getElementById('eye-icon-hide');
 
-        if (input.type === 'password') {
-            input.type = 'text';
-            eyeShow.classList.add('hidden');
-            eyeHide.classList.remove('hidden');
-        } else {
-            input.type = 'password';
-            eyeShow.classList.remove('hidden');
-            eyeHide.classList.add('hidden');
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeShow.classList.add('hidden');
+                eyeHide.classList.remove('hidden');
+            } else {
+                input.type = 'password';
+                eyeShow.classList.remove('hidden');
+                eyeHide.classList.add('hidden');
+            }
         }
-    }
-</script>
+    </script>
 @endpush

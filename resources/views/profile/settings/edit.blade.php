@@ -149,9 +149,11 @@
                                         <img id="imageCropper" class="max-h-96 w-full rounded object-contain" />
                                     </div>
                                     <div class="mt-4 flex justify-end gap-2">
-                                        <button type="button" class="uppercase font-bold cursor-pointer rounded bg-gradient-to-r from-red-500 to-[#E10000] px-4 py-2 text-white"
+                                        <button type="button"
+                                            class="cursor-pointer rounded bg-gradient-to-r from-red-500 to-[#E10000] px-4 py-2 font-bold uppercase text-white"
                                             x-on:click="cancelCrop()">Cancelar</button>
-                                        <button type="button" class="uppercase font-bold cursor-pointer rounded bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-4 py-2 text-white"
+                                        <button type="button"
+                                            class="cursor-pointer rounded bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-4 py-2 font-bold uppercase text-white"
                                             x-on:click="confirmCrop()">Confirmar</button>
                                     </div>
                                 </div>
@@ -215,165 +217,167 @@
                     </div>
                 </div>
             </div>
-
-            <script>
-                const emailInput = document.getElementById('email');
-                const currentPasswordWrapper = document.getElementById('current-password-wrapper');
-                const originalEmail = @json(auth()->user()->email);
-
-                emailInput.addEventListener('input', () => {
-                    if (emailInput.value !== originalEmail) {
-                        currentPasswordWrapper.style.display = 'block';
-                    } else {
-                        currentPasswordWrapper.style.display = 'none';
-                    }
-                });
-            </script>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
-        <script>
-                function usernameComponent() {
-                    return {
-                        createOpen: false,
-                        username: '{{ auth()->user()->username }}',
-                        originalUsername: '{{ auth()->user()->username }}',
-                        usernameEditable: false,
-                        usernameError: '',
-                        loading: false,
-                        checked: false,
+    <script>
+        const emailInput = document.getElementById('email');
+        const currentPasswordWrapper = document.getElementById('current-password-wrapper');
+        const originalEmail = @json(auth()->user()->email);
 
-                        resizedImageBase64: '',
-                        showResized: false,
-                        showCropper: false,
-                        cropper: null,
+        emailInput.addEventListener('input', () => {
+            if (emailInput.value !== originalEmail) {
+                currentPasswordWrapper.style.display = 'block';
+            } else {
+                currentPasswordWrapper.style.display = 'none';
+            }
+        });
+    </script>
 
-                        handleFileChange(event) {
-                            const file = event.target.files[0];
-                            if (!file) return;
+    <script>
+        function usernameComponent() {
+            return {
+                createOpen: false,
+                username: '{{ auth()->user()->username }}',
+                originalUsername: '{{ auth()->user()->username }}',
+                usernameEditable: false,
+                usernameError: '',
+                loading: false,
+                checked: false,
 
-                            const reader = new FileReader();
+                resizedImageBase64: '',
+                showResized: false,
+                showCropper: false,
+                cropper: null,
 
-                            reader.onload = e => {
-                                const image = document.getElementById('imageCropper');
-                                image.src = e.target.result;
+                handleFileChange(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
 
-                                this.showCropper = true;
+                    const reader = new FileReader();
 
-                                this.$nextTick(() => {
-                                    if (this.cropper) {
-                                        this.cropper.destroy();
-                                    }
+                    reader.onload = e => {
+                        const image = document.getElementById('imageCropper');
+                        image.src = e.target.result;
 
-                                    this.cropper = new Cropper(image, {
-                                        aspectRatio: 1,
-                                        viewMode: 1,
-                                        dragMode: 'move',
-                                        movable: true,
-                                        zoomable: true,
-                                        scalable: false,
-                                        ready() {
-                                            const containerData = this.cropper.getContainerData();
-                                            const cropBoxSize = 300; 
-                                            const left = (containerData.width - cropBoxSize) / 2;
-                                            const top = (containerData.height - cropBoxSize) / 2;
+                        this.showCropper = true;
 
-                                            this.cropper.setCropBoxData({
-                                                left,
-                                                top,
-                                                width: cropBoxSize,
-                                                height: cropBoxSize
-                                            });
-                                        }
-                                    });
-                                });
-                            };
-
-                            reader.readAsDataURL(file);
-                        },
-
-                        cancelCrop() {
-                            this.showCropper = false;
+                        this.$nextTick(() => {
                             if (this.cropper) {
                                 this.cropper.destroy();
-                                this.cropper = null;
                             }
-                            this.resizedImageBase64 = '';
-                            this.showResized = false;
-                            document.getElementById('file').value = '';
-                        },
 
-                        confirmCrop() {
-                            if (!this.cropper) return;
+                            this.cropper = new Cropper(image, {
+                                aspectRatio: 1,
+                                viewMode: 1,
+                                dragMode: 'move',
+                                movable: true,
+                                zoomable: true,
+                                scalable: false,
+                                ready() {
+                                    const containerData = this.cropper.getContainerData();
+                                    const cropBoxSize = 300;
+                                    const left = (containerData.width - cropBoxSize) / 2;
+                                    const top = (containerData.height - cropBoxSize) / 2;
 
-                            const canvas = this.cropper.getCroppedCanvas({
-                                width: 300,
-                                height: 300,
-                                imageSmoothingQuality: 'high'
+                                    this.cropper.setCropBoxData({
+                                        left,
+                                        top,
+                                        width: cropBoxSize,
+                                        height: cropBoxSize
+                                    });
+                                }
                             });
-
-                            this.resizedImageBase64 = canvas.toDataURL('image/png');
-                            this.showCropper = false;
-
-                            const previewImg = document.getElementById('previewImg');
-                            previewImg.src = this.resizedImageBase64;
-                            previewImg.classList.remove('hidden');
-
-                            const iconWrapper = document.getElementById('iconWrapper');
-                            if (iconWrapper) iconWrapper.style.display = 'none';
-
-                            this.cropper.destroy();
-                            this.cropper = null;
-                        },
-
-                        clearImage() {
-                            this.resizedImageBase64 = '';
-                            this.showResized = false;
-                            document.getElementById('file').value = '';
-
-                            const previewImg = document.getElementById('previewImg');
-                            previewImg.src = '';
-                            previewImg.classList.add('hidden');
-
-                            const iconWrapper = document.getElementById('iconWrapper');
-                            if (iconWrapper) iconWrapper.style.display = 'block';
-                        },
-
-                        checkUsername() {
-                            if (!this.usernameEditable) return;
-
-                            const trimmed = this.username.trim();
-
-                            if (
-                                trimmed === '' ||
-                                trimmed.toLowerCase() === this.originalUsername.toLowerCase()
-                            ) {
-                                this.usernameError = '';
-                                this.checked = false;
-                                return;
-                            }
-
-                            this.loading = true;
-                            this.checked = false;
-
-                            fetch(`{{ route('check.username') }}?username=${encodeURIComponent(this.username)}`)
-                                .then(res => {
-                                    if (!res.ok) throw new Error("Erro na requisição");
-                                    return res.json();
-                                })
-                                .then(data => {
-                                    this.usernameError = data.exists ? 'Nome de usuário já está em uso.' : '';
-                                    this.checked = true;
-                                })
-                                .catch(err => {
-                                    console.error(err);
-                                    this.usernameError = 'Erro ao verificar nome';
-                                })
-                                .finally(() => {
-                                    this.loading = false;
-                                });
-                        }
+                        });
                     };
+
+                    reader.readAsDataURL(file);
+                },
+
+                cancelCrop() {
+                    this.showCropper = false;
+                    if (this.cropper) {
+                        this.cropper.destroy();
+                        this.cropper = null;
+                    }
+                    this.resizedImageBase64 = '';
+                    this.showResized = false;
+                    document.getElementById('file').value = '';
+                },
+
+                confirmCrop() {
+                    if (!this.cropper) return;
+
+                    const canvas = this.cropper.getCroppedCanvas({
+                        width: 300,
+                        height: 300,
+                        imageSmoothingQuality: 'high'
+                    });
+
+                    this.resizedImageBase64 = canvas.toDataURL('image/png');
+                    this.showCropper = false;
+
+                    const previewImg = document.getElementById('previewImg');
+                    previewImg.src = this.resizedImageBase64;
+                    previewImg.classList.remove('hidden');
+
+                    const iconWrapper = document.getElementById('iconWrapper');
+                    if (iconWrapper) iconWrapper.style.display = 'none';
+
+                    this.cropper.destroy();
+                    this.cropper = null;
+                },
+
+                clearImage() {
+                    this.resizedImageBase64 = '';
+                    this.showResized = false;
+                    document.getElementById('file').value = '';
+
+                    const previewImg = document.getElementById('previewImg');
+                    previewImg.src = '';
+                    previewImg.classList.add('hidden');
+
+                    const iconWrapper = document.getElementById('iconWrapper');
+                    if (iconWrapper) iconWrapper.style.display = 'block';
+                },
+
+                checkUsername() {
+                    if (!this.usernameEditable) return;
+
+                    const trimmed = this.username.trim();
+
+                    if (
+                        trimmed === '' ||
+                        trimmed.toLowerCase() === this.originalUsername.toLowerCase()
+                    ) {
+                        this.usernameError = '';
+                        this.checked = false;
+                        return;
+                    }
+
+                    this.loading = true;
+                    this.checked = false;
+
+                    fetch(`{{ route('check.username') }}?username=${encodeURIComponent(this.username)}`)
+                        .then(res => {
+                            if (!res.ok) throw new Error("Erro na requisição");
+                            return res.json();
+                        })
+                        .then(data => {
+                            this.usernameError = data.exists ? 'Nome de usuário já está em uso.' : '';
+                            this.checked = true;
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            this.usernameError = 'Erro ao verificar nome';
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        });
                 }
-            </script>
+            };
+        }
+    </script>
 @endpush

@@ -3,7 +3,7 @@
 @props(['action'])
 
 @section('content')
-    <div class="flex flex-col items-center justify-center font-grotesk">
+    <div class="font-grotesk flex flex-col items-center justify-center">
         <div class="w-full max-w-md">
             <h1 class="mb-4 text-left text-2xl font-bold text-white">CADASTRAR-SE</h1>
             <form action="{{ $action }}" method="POST">
@@ -50,7 +50,8 @@
                                 <x-fas-eye-slash class="h-5 w-5" />
                             </span>
                         </button>
-                        <span class="text-[10px] font-semibold text-gray-400">- Senha com mínimo 8 caracteres, incluindo 1 maiúscula, 1 número e 1 caractere especial.</span>
+                        <span class="text-[10px] font-semibold text-gray-400">- Senha com mínimo 8 caracteres, incluindo 1
+                            maiúscula, 1 número e 1 caractere especial.</span>
 
                         <div class="min-h-[8px]">
                             @error('password')
@@ -101,21 +102,21 @@
 @endsection
 
 @push('scripts')
-<script>
-    function togglePassword(inputId, showIconId, hideIconId) {
-        const input = document.getElementById(inputId);
-        const eyeShow = document.getElementById(showIconId);
-        const eyeHide = document.getElementById(hideIconId);
+    <script>
+        function togglePassword(inputId, showIconId, hideIconId) {
+            const input = document.getElementById(inputId);
+            const eyeShow = document.getElementById(showIconId);
+            const eyeHide = document.getElementById(hideIconId);
 
-        if (input.type === 'password') {
-            input.type = 'text';
-            eyeShow.classList.add('hidden');
-            eyeHide.classList.remove('hidden');
-        } else {
-            input.type = 'password';
-            eyeShow.classList.remove('hidden');
-            eyeHide.classList.add('hidden');
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeShow.classList.add('hidden');
+                eyeHide.classList.remove('hidden');
+            } else {
+                input.type = 'password';
+                eyeShow.classList.remove('hidden');
+                eyeHide.classList.add('hidden');
+            }
         }
-    }
-</script>
+    </script>
 @endpush

@@ -46,8 +46,6 @@ class ProfileSettingsController extends Controller
     {
         $user = Auth::user();
 
-        // dd($request->file('file'));
-
         $rules = [
             'username' => [
                 'sometimes',
@@ -167,8 +165,6 @@ class ProfileSettingsController extends Controller
 
         return back()->with('info', 'Nenhuma alteração detectada.');
     }
-
-
 
     public function checkUsername(Request $request)
     {

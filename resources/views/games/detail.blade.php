@@ -47,7 +47,7 @@
                             <img :src="mainImage" alt="Screenshot principal" class="w-full shadow-lg">
                         </div>
 
-                        <div class="grid grid-cols-5 gap-2 mb-10">
+                        <div class="mb-10 grid grid-cols-5 gap-2">
                             @foreach ($game['screenshots'] as $shot)
                                 <img src="{{ $shot['path_thumbnail'] }}" alt="Miniatura"
                                     class="cursor-pointer transition hover:scale-105"
@@ -133,7 +133,7 @@
 
                 <div class="absolute -bottom-5 right-4 translate-y-1/2 rounded-sm bg-[#181c34] p-1">
                     <button type="submit"
-                        class="font-grotesk cursor-pointer rounded bg-[#1DAA2D] px-8 py-2 font-bold uppercase text-white transition hover:bg-[#00c814] whitespace-nowrap">
+                        class="font-grotesk cursor-pointer whitespace-nowrap rounded bg-[#1DAA2D] px-8 py-2 font-bold uppercase text-white transition hover:bg-[#00c814]">
                         {{ $hasRated ? 'Avaliar novamente' : 'Avaliar' }}
                     </button>
                 </div>
@@ -155,63 +155,63 @@
 @endsection
 
 @push('scripts')
-<script>
-    function ratingComponent({
-        rating = 0,
-        liked = false
-    }) {
-        return {
-            currentRating: rating,
-            liked: liked,
+    <script>
+        function ratingComponent({
+            rating = 0,
+            liked = false
+        }) {
+            return {
+                currentRating: rating,
+                liked: liked,
 
-            toggleRating(index) {
-                if (this.currentRating >= index) {
-                    this.currentRating = index - 0.5;
-                } else if (this.currentRating === index - 0.5) {
-                    this.currentRating = index - 1;
-                } else {
-                    this.currentRating = index;
-                }
-            },
-        };
-    }
-</script>
-
-
-<script>
-    function gameListHandler(gameId, alreadyInList) {
-        return {
-            inList: alreadyInList,
-
-            async toggleList() {
-                try {
-                    const response = await fetch('{{ route('games.toggleList') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            game_id: gameId
-                        })
-                    });
-                    const data = await response.json();
-
-                    if (data.success) {
-                        this.inList = data.added;
-
-                        if (this.inList) {
-                            window.location.href = '{{ route('games.myList') }}';
-                        }
+                toggleRating(index) {
+                    if (this.currentRating >= index) {
+                        this.currentRating = index - 0.5;
+                    } else if (this.currentRating === index - 0.5) {
+                        this.currentRating = index - 1;
                     } else {
-                        alert('Erro ao atualizar a lista');
+                        this.currentRating = index;
                     }
-                } catch (error) {
-                    console.error(error);
-                    alert('Erro na requisição');
+                },
+            };
+        }
+    </script>
+
+
+    <script>
+        function gameListHandler(gameId, alreadyInList) {
+            return {
+                inList: alreadyInList,
+
+                async toggleList() {
+                    try {
+                        const response = await fetch('{{ route('games.toggleList') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                game_id: gameId
+                            })
+                        });
+                        const data = await response.json();
+
+                        if (data.success) {
+                            this.inList = data.added;
+
+                            if (this.inList) {
+                                window.location.href = '{{ route('games.myList') }}';
+                            }
+                        } else {
+                            alert('Erro ao atualizar a lista');
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        alert('Erro na requisição');
+                    }
                 }
             }
         }
-    }
-</script>
+    </script>
 @endpush

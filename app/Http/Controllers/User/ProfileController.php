@@ -53,7 +53,6 @@ class ProfileController extends Controller
         $games = [];
 
         foreach ($gameIds as $appId) {
-            // Tenta pegar o dado do cache primeiro
             $gameData = Cache::remember("steam_game_{$appId}", now()->addHours(6), function () use ($appId) {
                 $response = Http::get('https://store.steampowered.com/api/appdetails', [
                     'appids' => $appId,
