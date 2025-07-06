@@ -42,3 +42,5 @@ jobs:
         run: php artisan key:generate
       - name: Run Feature Tests
         run: php artisan test --testsuite=Feature
+      - name: Run Profile Tests with Debug
+        run: php artisan test --filter=ProfileTest --debug
