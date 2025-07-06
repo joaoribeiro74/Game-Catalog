@@ -61,7 +61,7 @@ touch database/database.sqlite
 php artisan migrate --seed
 ```
 
-8. Crie o link simbólico para o diretório storage (necessário para que imagens enviadas via upload possam vistas):
+8. Crie o link simbólico para o diretório storage (necessário para que imagens enviadas via upload possam ser vistas):
 ```
 php artisan storage:link
 ```
