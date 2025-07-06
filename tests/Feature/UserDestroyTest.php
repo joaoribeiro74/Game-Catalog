@@ -21,23 +21,25 @@ class UserDestroyTest extends TestCase
 
         $this->actingAs($user);
 
-        $file = UploadedFile::fake()->image('avatar.jpg');
-        $this->post(route('profile.settings.store'), ['file' => $file]);
+        $image = UploadedFile::fake()->image('avatar.jpg');
+        $contents = file_get_contents($image->getPathname());
+        $base64 = 'data:image/jpeg;base64,' . base64_encode($contents);
+
+        $this->post(route('profile.settings.update'), ['resizedImage' => $base64]);
         $user->refresh();
-        $attachment = $user->attachment;
-
-        Storage::disk('public')->assertExists('attachments/' . $file->hashName());
 
         $attachment = $user->attachment;
+        Storage::disk('public')->assertExists($attachment->filepath);
+
         $response = $this->delete(route('profile.settings.destroy', $attachment->id));
 
         $response->assertStatus(302);
         $response->assertSessionHas('success');
 
-        Storage::disk('public')->assertMissing('attachments/' . $file->hashName());
-
+        Storage::disk('public')->assertMissing($attachment->filepath);
         $this->assertDatabaseMissing('attachments', ['id' => $attachment->id]);
     }
+
 
     public function test_observer_deletes_file_when_attachment_deleted()
     {
@@ -46,17 +48,19 @@ class UserDestroyTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $file = UploadedFile::fake()->image('avatar.jpg');
-        $this->post(route('profile.settings.store'), ['file' => $file]);
+        $image = UploadedFile::fake()->image('avatar.jpg');
+        $contents = file_get_contents($image->getPathname());
+        $base64 = 'data:image/jpeg;base64,' . base64_encode($contents);
+        $this->post(route('profile.settings.update'), ['resizedImage' => $base64]);
 
         $user->refresh();
 
         $attachment = $user->attachment;
 
-        Storage::disk('public')->assertExists('attachments/' . $attachment->filepath);
+        Storage::disk('public')->assertExists($attachment->filepath);
 
         $attachment->delete();
 
-        Storage::disk('public')->assertMissing('attachments/' . $attachment->filepath);
+        Storage::disk('public')->assertMissing($attachment->filepath);
     }
 }

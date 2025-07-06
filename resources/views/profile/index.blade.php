@@ -3,8 +3,13 @@
 @section('content')
     <div class="font-grotesk flex items-center justify-between">
         <div class="flex flex-row items-center justify-center gap-8">
-            <x-fas-circle-user class="h-24 w-24" fill="#fff" />
-            <div class="flex flex-col justify-center text-start gap-1">
+            @if ($user->attachment)
+                <img src="{{ asset('storage/' . $user->attachment->filepath) }}" alt="Avatar"
+                    class="h-24 w-24 rounded-full object-cover" />
+            @else
+                <x-fas-circle-user class="h-24 w-24" fill="#fff" />
+            @endif
+            <div class="flex flex-col justify-center gap-1 text-start">
                 @if (!empty($user->display_name))
                     <p class="font-grotesk text-xl font-semibold">{{ $user->display_name }}</p>
                 @endif
@@ -95,7 +100,6 @@
                     </div>
                 @endforeach
 
-                {{-- Estrelas finais --}}
                 <span class="flex flex-row items-center justify-end">
                     <x-fas-star class="h-3 w-3 text-gray-400" />
                     <x-fas-star class="h-3 w-3 text-gray-400" />

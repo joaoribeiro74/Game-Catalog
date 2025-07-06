@@ -34,7 +34,6 @@
                 </div>
             </div>
 
-            <!-- Modal Confirmar Exclusão -->
             <div x-show="deleteOpen" x-transition x-cloak @keydown.escape.window="deleteOpen = false"
                 class="fixed inset-0 z-50 flex items-center justify-center"
                 style="background-color: rgba(91, 112, 131, 0.4);">

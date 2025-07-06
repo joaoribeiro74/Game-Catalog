@@ -20,33 +20,36 @@ class StoreAttachmentTest extends TestCase
 
         $this->actingAs($user);
 
-        $file = UploadedFile::fake()->image('avatar.jpg');
+        $image = UploadedFile::fake()->image('avatar.jpg');
+        $contents = file_get_contents($image->getPathname());
+        $base64 = 'data:image/jpeg;base64,' . base64_encode($contents);
 
-        $response = $this->post(route('profile.settings.store'), [
-            'file' => $file,
-        ]);
+        $response = $this->post(route('profile.settings.update'), ['resizedImage' => $base64]);
 
         $response->assertStatus(302);
 
-        Storage::disk('public')->assertExists('attachments/' . $file->hashName());
+        $user->refresh();
+        $attachment = $user->attachment;
+
+        Storage::disk('public')->assertExists($attachment->filepath);
 
         $this->assertDatabaseHas('attachments', [
             'user_id' => $user->id,
-            'filepath' => $file->hashName(),
+            'filepath' => $attachment->filepath,
         ]);
     }
 
-    public function test_upload_invalid_file_type_fails()
+    public function test_upload_invalid_image_format_fails()
     {
         Storage::fake('public');
 
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        $file = UploadedFile::fake()->create('document.pdf', 100); // pdf não permitido
+        $invalidBase64 = 'data:image/gif;base64,R0lGODlhPQBEAPeoAJosM//AwO/AwHV7f//';
 
-        $response = $this->post(route('profile.settings.store'), [
-            'file' => $file,
+        $response = $this->post(route('profile.settings.update'), [
+            'resizedImage' => $invalidBase64,
         ]);
 
         $response->assertSessionHasErrors('file');

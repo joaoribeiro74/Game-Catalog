@@ -10,14 +10,14 @@
     <h1 class="font-grotesk mb-4 text-2xl font-bold">JOGOS</h1>
 
     @php
-        $layout = [4, 3, 2, 3, 4, 3, 2, 3, 4]; // 28 jogos no total
+        $layout = [4, 3, 2, 3, 4, 3, 2, 3, 4]; 
         $sizes = [4 => 'sm', 3 => 'md', 2 => 'lg'];
-        $gamesCollection = collect($games); // mutável
+        $gamesCollection = collect($games); 
     @endphp
 
     @foreach ($layout as $count)
         @php
-            $chunk = $gamesCollection->splice(0, $count); // remove os primeiros $count jogos
+            $chunk = $gamesCollection->splice(0, $count); 
             $size = $sizes[$count] ?? 'md';
         @endphp
 

@@ -120,14 +120,6 @@
                         @if (auth()->user()->attachment)
                             <img id="previewImg" src="{{ asset('storage/' . auth()->user()->attachment->filepath) }}"
                                 alt="Avatar" class="h-24 w-24 rounded-full" />
-                            <form action="{{ route('profile.settings.destroy') }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                    class="cursor-pointer rounded bg-gradient-to-r from-red-500 to-[#E10000] px-4 py-2 font-bold uppercase text-white shadow-sm shadow-black">
-                                    Remover Avatar
-                                </button>
-                            </form>
                         @else
                             <div id="iconWrapper">
                                 <x-fas-circle-user class="h-24 w-24" fill="#fff" />
@@ -135,31 +127,81 @@
 
                             <img id="previewImg" class="hidden h-24 w-24 rounded-full" alt="Preview Avatar" />
 
+                            <button type="button" x-show="resizedImageBase64 !== ''" x-cloak
+                                class="font-grotesk text-sm font-bold uppercase text-red-600 hover:underline"
+                                x-on:click="clearImage()">
+                                Cancelar
+                            </button>
+
                             <label for="file"
                                 class="mt-2 cursor-pointer rounded bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-4 py-2 font-bold uppercase text-white shadow-sm shadow-black">
                                 Envie seu avatar
                             </label>
                             <input id="file" name="file" type="file" accept=".jpg,.jpeg,.png" class="hidden"
-                                onchange="previewAvatar(event)" />
+                                x-on:change="handleFileChange" />
+
+                            <div x-show="showCropper" x-cloak
+                                class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                                style="background-color: rgba(91, 112, 131, 0.4);">
+                                <div class="w-full max-w-lg rounded-[2px] bg-[#1f2235] p-4">
+                                    <h3 class="mb-4 text-lg font-bold text-gray-400">Ajuste sua imagem</h3>
+                                    <div>
+                                        <img id="imageCropper" class="max-h-96 w-full rounded object-contain" />
+                                    </div>
+                                    <div class="mt-4 flex justify-end gap-2">
+                                        <button type="button"
+                                            class="cursor-pointer rounded bg-gradient-to-r from-red-500 to-[#E10000] px-4 py-2 font-bold uppercase text-white"
+                                            x-on:click="cancelCrop()">Cancelar</button>
+                                        <button type="button"
+                                            class="cursor-pointer rounded bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-4 py-2 font-bold uppercase text-white"
+                                            x-on:click="confirmCrop()">Confirmar</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div x-show="showResized" class="mt-2 flex flex-col items-center gap-2">
+                                <img :src="resizedImageBase64" class="h-24 w-24 rounded-full border border-gray-600"
+                                    alt="Preview cortado" />
+                                <button type="button" class="rounded bg-red-600 px-3 py-1 text-sm text-white"
+                                    x-on:click="clearImage()">Cancelar</button>
+                            </div>
+
+                            <input type="hidden" name="resizedImage" x-model="resizedImageBase64" />
                         @endif
                     </div>
                 </div>
             </div>
         </form>
 
+        <div class="flex gap-8">
+            <div class="w-1/2"></div>
+            <div class="w-1/2">
+                @if (auth()->user()->attachment)
+                    <div class="-translate-y-50 flex justify-center">
+                        <form action="{{ route('profile.settings.destroy') }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="cursor-pointer rounded bg-gradient-to-r from-red-500 to-[#E10000] px-4 py-2 font-bold uppercase text-white shadow-sm shadow-black">
+                                Remover Avatar
+                            </button>
+                        </form>
+                    </div>
+                @endif
+            </div>
 
-        <div x-show="createOpen" x-cloak x-transition class="fixed inset-0 z-50 flex items-center justify-center"
-            style="background-color: rgba(91, 112, 131, 0.4);">
-            <div class="w-[90%] max-w-md rounded-lg bg-[#1f2235] p-6 text-white shadow-lg">
-                <h2 class="mb-4 text-lg font-bold">Atenção</h2>
-                <p class="text-sm">Você só pode trocar seu nome de usuário a cada 3 meses.</p>
-                <div class="mt-6 flex justify-end gap-2">
-                    <button x-on:click="createOpen = false"
-                        class="cursor-pointer rounded bg-gray-500 px-4 py-2 text-sm font-bold uppercase text-white hover:bg-gray-600">
-                        Cancelar
-                    </button>
-                    <button
-                        x-on:click="
+            <div x-show="createOpen" x-cloak x-transition class="fixed inset-0 z-50 flex items-center justify-center"
+                style="background-color: rgba(91, 112, 131, 0.4);">
+                <div class="w-[90%] max-w-md rounded-lg bg-[#1f2235] p-6 text-white shadow-lg">
+                    <h2 class="mb-4 text-lg font-bold">Atenção</h2>
+                    <p class="text-sm">Você só pode trocar seu nome de usuário a cada 3 meses.</p>
+                    <div class="mt-6 flex justify-end gap-2">
+                        <button x-on:click="createOpen = false"
+                            class="cursor-pointer rounded bg-gray-500 px-4 py-2 text-sm font-bold uppercase text-white hover:bg-gray-600">
+                            Cancelar
+                        </button>
+                        <button
+                            x-on:click="
                             createOpen = false;
                             usernameEditable = true;
                             $nextTick(() => {
@@ -169,95 +211,173 @@
                                 input.focus();
                             });
                         "
-                        class="cursor-pointer rounded bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-4 py-2 text-sm font-bold uppercase text-white">
-                        Entendi
-                    </button>
+                            class="cursor-pointer rounded bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-4 py-2 text-sm font-bold uppercase text-white">
+                            Entendi
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+@endsection
 
-        <script>
-            const emailInput = document.getElementById('email');
-            const currentPasswordWrapper = document.getElementById('current-password-wrapper');
-            const originalEmail = @json(auth()->user()->email);
+@push('scripts')
+    <script>
+        const emailInput = document.getElementById('email');
+        const currentPasswordWrapper = document.getElementById('current-password-wrapper');
+        const originalEmail = @json(auth()->user()->email);
 
-            emailInput.addEventListener('input', () => {
-                if (emailInput.value !== originalEmail) {
-                    currentPasswordWrapper.style.display = 'block';
-                } else {
-                    currentPasswordWrapper.style.display = 'none';
-                }
-            });
-        </script>
-    @endsection
-
-    @push('scripts')
-        <script>
-            function usernameComponent() {
-                return {
-                    createOpen: false,
-                    username: '{{ auth()->user()->username }}',
-                    originalUsername: '{{ auth()->user()->username }}',
-                    usernameEditable: false,
-                    usernameError: '',
-                    loading: false,
-                    checked: false,
-
-                    checkUsername() {
-                        if (!this.usernameEditable) return;
-
-                        const trimmed = this.username.trim();
-
-                        if (
-                            trimmed === '' ||
-                            trimmed.toLowerCase() === this.originalUsername.toLowerCase()
-                        ) {
-                            this.usernameError = '';
-                            this.checked = false;
-                            return;
-                        }
-
-                        this.loading = true;
-                        this.checked = false;
-
-                        fetch(`{{ route('check.username') }}?username=${encodeURIComponent(this.username)}`)
-                            .then(res => {
-                                if (!res.ok) throw new Error("Erro na requisição");
-                                return res.json();
-                            })
-                            .then(data => {
-                                this.usernameError = data.exists ? 'Nome de usuário já está em uso.' : '';
-                                this.checked = true;
-                            })
-                            .catch(err => {
-                                console.error(err);
-                                this.usernameError = 'Erro ao verificar nome';
-                            })
-                            .finally(() => {
-                                this.loading = false;
-                            });
-                    }
-                };
+        emailInput.addEventListener('input', () => {
+            if (emailInput.value !== originalEmail) {
+                currentPasswordWrapper.style.display = 'block';
+            } else {
+                currentPasswordWrapper.style.display = 'none';
             }
-        </script>
+        });
+    </script>
 
-        <script>
-            function previewAvatar(event) {
-                const file = event.target.files[0];
-                const previewImg = document.getElementById('previewImg');
-                const iconWrapper = document.getElementById('iconWrapper');
+    <script>
+        function usernameComponent() {
+            return {
+                createOpen: false,
+                username: '{{ auth()->user()->username }}',
+                originalUsername: '{{ auth()->user()->username }}',
+                usernameEditable: false,
+                usernameError: '',
+                loading: false,
+                checked: false,
 
-                if (file) {
+                resizedImageBase64: '',
+                showResized: false,
+                showCropper: false,
+                cropper: null,
+
+                handleFileChange(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
                     const reader = new FileReader();
 
-                    reader.onload = function(e) {
-                        previewImg.src = e.target.result;
-                        previewImg.classList.remove('hidden'); // mostra a imagem
-                        if (iconWrapper) iconWrapper.style.display = 'none'; // esconde o ícone
-                    }
+                    reader.onload = e => {
+                        const image = document.getElementById('imageCropper');
+                        image.src = e.target.result;
+
+                        this.showCropper = true;
+
+                        this.$nextTick(() => {
+                            if (this.cropper) {
+                                this.cropper.destroy();
+                            }
+
+                            this.cropper = new Cropper(image, {
+                                aspectRatio: 1,
+                                viewMode: 1,
+                                dragMode: 'move',
+                                movable: true,
+                                zoomable: true,
+                                scalable: false,
+                                ready() {
+                                    const containerData = this.cropper.getContainerData();
+                                    const cropBoxSize = 300;
+                                    const left = (containerData.width - cropBoxSize) / 2;
+                                    const top = (containerData.height - cropBoxSize) / 2;
+
+                                    this.cropper.setCropBoxData({
+                                        left,
+                                        top,
+                                        width: cropBoxSize,
+                                        height: cropBoxSize
+                                    });
+                                }
+                            });
+                        });
+                    };
 
                     reader.readAsDataURL(file);
+                },
+
+                cancelCrop() {
+                    this.showCropper = false;
+                    if (this.cropper) {
+                        this.cropper.destroy();
+                        this.cropper = null;
+                    }
+                    this.resizedImageBase64 = '';
+                    this.showResized = false;
+                    document.getElementById('file').value = '';
+                },
+
+                confirmCrop() {
+                    if (!this.cropper) return;
+
+                    const canvas = this.cropper.getCroppedCanvas({
+                        width: 300,
+                        height: 300,
+                        imageSmoothingQuality: 'high'
+                    });
+
+                    this.resizedImageBase64 = canvas.toDataURL('image/png');
+                    this.showCropper = false;
+
+                    const previewImg = document.getElementById('previewImg');
+                    previewImg.src = this.resizedImageBase64;
+                    previewImg.classList.remove('hidden');
+
+                    const iconWrapper = document.getElementById('iconWrapper');
+                    if (iconWrapper) iconWrapper.style.display = 'none';
+
+                    this.cropper.destroy();
+                    this.cropper = null;
+                },
+
+                clearImage() {
+                    this.resizedImageBase64 = '';
+                    this.showResized = false;
+                    document.getElementById('file').value = '';
+
+                    const previewImg = document.getElementById('previewImg');
+                    previewImg.src = '';
+                    previewImg.classList.add('hidden');
+
+                    const iconWrapper = document.getElementById('iconWrapper');
+                    if (iconWrapper) iconWrapper.style.display = 'block';
+                },
+
+                checkUsername() {
+                    if (!this.usernameEditable) return;
+
+                    const trimmed = this.username.trim();
+
+                    if (
+                        trimmed === '' ||
+                        trimmed.toLowerCase() === this.originalUsername.toLowerCase()
+                    ) {
+                        this.usernameError = '';
+                        this.checked = false;
+                        return;
+                    }
+
+                    this.loading = true;
+                    this.checked = false;
+
+                    fetch(`{{ route('check.username') }}?username=${encodeURIComponent(this.username)}`)
+                        .then(res => {
+                            if (!res.ok) throw new Error("Erro na requisição");
+                            return res.json();
+                        })
+                        .then(data => {
+                            this.usernameError = data.exists ? 'Nome de usuário já está em uso.' : '';
+                            this.checked = true;
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            this.usernameError = 'Erro ao verificar nome';
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        });
                 }
-            }
-        </script>
-    @endpush
+            };
+        }
+    </script>
+@endpush

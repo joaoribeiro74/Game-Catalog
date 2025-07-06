@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('content')
-    <div class="mt-10 flex flex-col items-center justify-center font-grotesk">
+    <div class="font-grotesk mt-10 flex flex-col items-center justify-center">
         <div class="w-full max-w-md">
             <h1 class="mb-4 text-left text-2xl font-bold text-white">INICIAR SESSÃO</h1>
             <form action="{{ route('authenticate') }}" method="POST">
@@ -26,7 +26,6 @@
                         <input type="password" name="password" id="password"
                             class="w-full rounded bg-[#24283F] px-3 py-2 pr-10 text-white shadow-sm shadow-gray-900">
 
-                        <!-- Botão do olho -->
                         <button type="button" onclick="togglePassword()"
                             class="absolute right-3 flex -translate-y-[30px] items-center text-white hover:text-[#04BCFC] focus:outline-none">
                             <span id="eye-icon-show" class="block">
@@ -58,20 +57,22 @@
     </div>
 @endsection
 
-<script>
-    function togglePassword() {
-        const input = document.getElementById('password');
-        const eyeShow = document.getElementById('eye-icon-show');
-        const eyeHide = document.getElementById('eye-icon-hide');
+@push('scripts')
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const eyeShow = document.getElementById('eye-icon-show');
+            const eyeHide = document.getElementById('eye-icon-hide');
 
-        if (input.type === 'password') {
-            input.type = 'text';
-            eyeShow.classList.add('hidden');
-            eyeHide.classList.remove('hidden');
-        } else {
-            input.type = 'password';
-            eyeShow.classList.remove('hidden');
-            eyeHide.classList.add('hidden');
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeShow.classList.add('hidden');
+                eyeHide.classList.remove('hidden');
+            } else {
+                input.type = 'password';
+                eyeShow.classList.remove('hidden');
+                eyeHide.classList.add('hidden');
+            }
         }
-    }
-</script>
+    </script>
+@endpush

@@ -53,12 +53,6 @@ class GameController extends Controller
 
         return view('games.index', compact('games'));
     }
-
-    public function create()
-    {
-        return view('games.create');
-    }
-
     public function detail(string $id)
     {
         $response = Http::get("https://store.steampowered.com/api/appdetails", [
@@ -121,26 +115,6 @@ class GameController extends Controller
         return redirect()->route('games.index')->with('error', 'Jogo não encontrado.');
     }
 
-    public function edit(string $id)
-    {
-        return view(
-            'games.edit',
-            [
-                'game' => [
-                    'id' => $id,
-                    'title' => 'The Witcher 3',
-                    'status' => 'Jogado',
-                    'rating' => 9.5
-                ]
-            ]
-        );
-    }
-
-    public function update(Request $request)
-    {
-        return redirect()->route('games.index');
-    }
-
     public function myList()
     {
         $user = Auth::user();
@@ -201,7 +175,6 @@ class GameController extends Controller
     {
         $user = Auth::user();
 
-        // Garante que o item pertence ao usuário
         if ($item->gameList->user_id !== $user->id) {
             abort(403);
         }

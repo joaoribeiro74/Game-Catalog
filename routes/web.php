@@ -27,11 +27,8 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['prefix' => 'games', 'middleware' => 'auth'], function () {
     Route::get('/', [GameController::class, 'index'])->name('games.index');
     Route::get('/myList', [GameController::class, 'myList'])->name('games.myList');
-    Route::get('/create', [GameController::class, 'create'])->name('games.create');
     Route::get('/{id}', [GameController::class, 'detail'])->name('games.detail');
-    Route::get('/{id}/edit', [GameController::class, 'edit'])->name('games.edit');
     Route::post('/{id}/update', [GameController::class, 'update'])->name('games.update');
-    Route::post('/games/{id}/rate', [GameController::class, 'rate'])->name('games.rate');
     Route::post('/rating', [RatingController::class, 'storeOrUpdate'])->name('games.rating.storeOrUpdate');
     Route::post('/myList/toggle', [GameController::class, 'toggleGame'])->name('games.toggleList');
     Route::get('/search/suggest', [GameApiController::class, 'liveSearch'])->name('games.search.suggest');
@@ -45,30 +42,12 @@ Route::group(['prefix' => 'games', 'middleware' => 'auth'], function () {
     });
 });
 
-// Route::group(['prefix' => 'games', 'middleware' => 'auth'], function () {
-//     Route::get('/', [GameController::class, 'index'])->name('games.index');
-//     Route::get('/myList', [GameController::class, 'myList'])->name('games.myList');
-//     Route::get('/create', [GameController::class, 'create'])->name('games.create');
-//     Route::get('/{id}', [GameController::class, 'detail'])->name('games.detail');
-//     Route::get('/{id}/edit', [GameController::class, 'edit'])->name('games.edit');
-//     Route::post('/{id}/update', [GameController::class, 'update'])->name('games.update');
-//     Route::post('/games/{id}/rate', [GameController::class, 'rate'])->name('games.rate');
-//     Route::post('/myList/toggle', [GameController::class, 'toggleGame'])->name('games.toggleList');
-//     Route::delete('/myList/{item}', [GameController::class, 'removeItem'])->name('games.myList.remove');
-//     Route::post('/myList', [GameListController::class, 'store'])->name('games.myList.store');
-//     Route::post('/myList/addItem', [GameListController::class, 'addItem'])->name('games.myList.addItem');
-//     Route::post('/rating', [RatingController::class, 'storeOrUpdate'])->name('games.rating.storeOrUpdate');
-//     Route::put('/{id}', [GameListController::class, 'update'])->name('games.myList.update');
-//     Route::delete('/{id}', [GameListController::class, 'destroy'])->name('games.myList.destroy');
-// });
-
 Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/games', [ProfileController::class, 'games'])->name('profile.games');
     Route::get('/profile/lists', [ProfileController::class, 'lists'])->name('profile.lists');
     Route::get('/profile/lists/{list}', [ProfileController::class, 'show'])->name('profile.lists.show');
     Route::get('/profile/settings/edit', [ProfileSettingsController::class, 'edit'])->name('profile.settings.edit');
-    Route::post('/profile/settings/avatar', [AttachmentController::class, 'store'])->name('profile.settings.store');
     Route::delete('/profile/settings/avatar', [AttachmentController::class, 'destroy'])->name('profile.settings.destroy');
     Route::post('/profile/settings/update', [ProfileSettingsController::class, 'update'])->name('profile.settings.update');
     Route::post('/profile/settings/email', [ProfileSettingsController::class, 'updateEmail'])->name('profile.settings.email');

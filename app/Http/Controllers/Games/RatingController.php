@@ -42,8 +42,7 @@ class RatingController extends Controller
 
             return redirect()->route('profile.index')->with('success', 'Sua avaliação foi salva com sucesso!');
         } catch (ValidationException $e) {
-            $ratingError = $e->validator->errors()->first('rating') ?? 'Erro ao salvar sua avaliação.';
-            return redirect()->back()->withInput()->with('error', $ratingError);
+            return redirect()->back()->withInput()->withErrors($e->validator);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erro ao salvar sua avaliação.');
         }

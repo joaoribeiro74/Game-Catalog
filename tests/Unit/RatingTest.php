@@ -11,12 +11,31 @@ class RatingTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_rating_belongs_to_user()
+    public function test_casts_are_correct()
     {
-        $user = User::factory()->create();
-        $rating = Rating::factory()->create(['user_id' => $user->id]);
+        $rating = new Rating();
 
-        $this->assertInstanceOf(User::class, $rating->user()->getModel());
+        $expected = [
+            'liked' => 'boolean',
+            'reviewed_at' => 'datetime',
+        ];
+
+        foreach ($expected as $key => $value) {
+            $this->assertArrayHasKey($key, $rating->getCasts());
+            $this->assertEquals($value, $rating->getCasts()[$key]);
+        }
+    }
+
+    public function test_rating_validation_accepts_valid_values()
+    {
+        $rating = new Rating([
+            'user_id' => User::factory()->create()->id,
+            'game_id' => 1,
+            'rating' => 3.5,
+            'liked' => true,
+        ]);
+
+        $this->assertTrue($rating->save());
     }
 
     public function test_rating_invalid_value_throws_exception()
@@ -26,11 +45,10 @@ class RatingTest extends TestCase
 
         $user = User::factory()->create();
 
-        // Tentar criar um rating inválido (rating = 0)
         Rating::create([
             'user_id' => $user->id,
             'game_id' => 123456,
-            'rating' => 0, // inválido
+            'rating' => 0,
             'liked' => true,
             'review' => 'Test review',
             'reviewed_at' => now(),
