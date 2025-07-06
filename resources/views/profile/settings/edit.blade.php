@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @section('content')
-    <div x-data="usernameComponent()" x-transition x-cloak class="font-grotesk uppercase">
+    <div x-data="usernameComponent()" x-transition x-cloak class="font-grotesk uppercase md:px-0 px-2">
         <h4 class="text-lg font-bold">CONFIGURAÇÕES DA CONTA</h4>
 
         <div class="mt-10 items-center">
@@ -21,10 +21,10 @@
 
 
         <form method="POST" action="{{ route('profile.settings.update') }}" id="settingsForm" enctype="multipart/form-data"
-            class="flex gap-8">
+            class="flex md:flex-row flex-col gap-8">
             @csrf
 
-            <div class="w-1/2">
+            <div class="w-full md:w-1/2">
                 <span class="my-6 block font-bold uppercase text-gray-400">Perfil</span>
 
                 <div class="flex flex-row justify-between">
@@ -113,7 +113,7 @@
                 </div>
             </div>
 
-            <div class="w-1/2 p-2">
+            <div class="w-full md:w-1/2 p-2">
                 <div class="flex flex-col items-center">
                     <span class="my-6 block font-bold uppercase text-gray-400">IMAGEM DE PERFIL</span>
                     <div class="flex flex-col items-center gap-4">
@@ -174,10 +174,10 @@
         </form>
 
         <div class="flex gap-8">
-            <div class="w-1/2"></div>
-            <div class="w-1/2">
+            <div class="hidden md:flex md:w-1/2"></div>
+            <div class="w-full md:w-1/2">
                 @if (auth()->user()->attachment)
-                    <div class="-translate-y-50 flex justify-center">
+                    <div class="md:-translate-y-50 flex justify-center">
                         <form action="{{ route('profile.settings.destroy') }}" method="POST">
                             @csrf
                             @method('DELETE')

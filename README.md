@@ -22,6 +22,8 @@ Jogadores que querem organizar e gerenciar suas coleções de jogos de forma pr�
 
 ## Print da Tela Principal
 
+![Tela Principal](docs/screenshots/tela-principal.png)
+
 ## 🛠️ Execução do Projeto
 
 1. Certifique-se de que o laravel está instalado no seu computador. Siga o guia oficial:
@@ -51,7 +53,6 @@ php artisan key:generate
 
 6. Crie o arquivo do banco de dados SQLite:
 ```
-mkdir database
 touch database/database.sqlite
 ```
 
@@ -60,7 +61,12 @@ touch database/database.sqlite
 php artisan migrate --seed
 ```
 
-8. Rode o servidor local:
+8. Crie o link simbólico para o diretório storage (necessário para que imagens enviadas via upload possam vistas):
+```
+php artisan storage:link
+```
+
+9. Rode o servidor local:
 ```
 composer run dev
 ```

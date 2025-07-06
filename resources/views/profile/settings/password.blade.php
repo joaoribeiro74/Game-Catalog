@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @section('content')
-    <div class="font-grotesk uppercase">
+    <div class="font-grotesk uppercase md:px-0 px-2">
         <h4 class="text-lg font-bold">CONFIGURAÇÕES DA CONTA</h4>
 
         <div class="mt-10 items-center">
@@ -21,7 +21,7 @@
         <form method="POST" action="{{ route('profile.settings.password') }}" class="flex gap-8">
             @csrf
 
-            <div class="w-1/2">
+            <div class="w-full md:w-1/2">
                 <span class="my-6 block font-bold uppercase text-gray-400">MUDAR SENHA</span>
 
                 <div class="mb-6">
