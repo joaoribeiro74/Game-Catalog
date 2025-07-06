@@ -1,32 +1,72 @@
-# 🎮 Catálogo de Jogos Favoritos
+# 🎮 GameHub
 
-Este projeto é uma aplicação web construída com Laravel para ajudar os usuários a organizarem e visualizarem seus jogos favoritos. Cada usuário pode cadastrar os jogos que jogou, está jogando ou deseja jogar e atribuir uma nota.
+GameHub é uma aplicação web construída com Laravel que oferece uma plataforma para listar e avaliar jogos de videogame. Os usuários podem criar listas personalizadas de jogos, registrar avaliações com notas e acompanhar suas coleções pessoais de forma simples.
 
-## 🛠️ Como rodar localmente
+## Para que serve?
 
-1. Clone o repositório:
+- Gerenciar listas personalizadas: Crie e gerencie listas de jogos, como favoritos, jogos a concluir, ou coleções temáticas.
+- Avaliar jogos: Registre notas para cada jogo e visualize seu histórico.
+- Visualizar seu perfil de usuário com suas coleções de jogos.
+
+## Público-alvo
+
+Jogadores que querem organizar e gerenciar suas coleções de jogos de forma prática e que queiram avaliar os jogos em que já passaram um tempo.
+
+## Funcionalidades
+- Cadastro e autenticação de usuários.
+- Criação, edição e exclusão de listas de jogos.
+- Visualização exclusiva por usuário.
+- Integração com API externa.
+- Avaliação de jogos.
+- Gerenciamento de avatar do usuário.
+
+## Print da Tela Principal
+
+![Tela Principal](docs/screenshots/tela-principal.png)
+
+## 🛠️ Execução do Projeto
+
+1. Certifique-se de que o laravel está instalado no seu computador. Siga o guia oficial:
+https://laravel.com/docs/12.x
+
+2. Clone o repositório:
 ```bash
 git clone https://github.com/joaoribeiro74/Game-Catalog.git
 cd Game-Catalog
 ```
 
-2. Instale as dependências:
+3. Instale as dependências:
 ```bash
 npm install && npm run build
 composer install
 ```
 
-3. Criar a variáveis de ambiente:
+4. Criar a variáveis de ambiente:
 ```
-.env
+cp .env.example .env
 ```
 
-## ✨ Funcionalidades
-- Cadastro e autenticação de usuários
-- Adição de jogos com título, descrição, status, nota e imagem
-- Listagem e filtro por status
-- Edição e exclusão de jogos
-- Cada usuário vê apenas seus próprios jogos
+5. Gere a chave da aplicação Laravel:
+```
+php artisan key:generate
+```
 
-## 🧪 Módulos aplicados
+6. Crie o arquivo do banco de dados SQLite:
+```
+touch database/database.sqlite
+```
 
+7. Rode as migrations e seeders:
+```
+php artisan migrate --seed
+```
+
+8. Crie o link simbólico para o diretório storage (necessário para que imagens enviadas via upload possam vistas):
+```
+php artisan storage:link
+```
+
+9. Rode o servidor local:
+```
+composer run dev
+```

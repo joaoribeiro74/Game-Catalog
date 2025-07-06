@@ -31,7 +31,7 @@
 <div class="relative z-0 transform bg-[#181c34] shadow-md shadow-black transition duration-300 hover:scale-110 hover:z-10 will-change-transform rounded">
     <img src="{{ $image }}" alt="{{ $name }}" class="w-full object-cover rounded-t {{ $imageSize }}">
 
-    <div class="p-4 flex flex-col justify-between gap-2">
+    <div class="md:p-4 p-2 flex flex-col justify-between gap-2">
         <h2 class="font-grotesk font-bold uppercase text-white whitespace-nowrap overflow-hidden overflow-ellipsis {{ $titleSize }}">{{ $name }}</h2>
         <div class="flex justify-between items-center">
             <p class="font-grotesk font-semibold uppercase bg-[#08041c] text-gray-400 whitespace-nowrap {{ $priceSize }}">{{ $price }}</p>

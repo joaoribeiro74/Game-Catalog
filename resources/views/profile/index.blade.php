@@ -1,8 +1,8 @@
 @extends('layouts.user')
 
 @section('content')
-    <div class="font-grotesk flex items-center justify-between">
-        <div class="flex flex-row items-center justify-center gap-8">
+    <div class="font-grotesk flex md:flex-row flex-col md:items-center justify-between">
+        <div class="flex flex-row items-center md:justify-center md:px-0 px-2 md:gap-8 md:pb-0 pb-4 gap-4">
             @if ($user->attachment)
                 <img src="{{ asset('storage/' . $user->attachment->filepath) }}" alt="Avatar"
                     class="h-24 w-24 rounded-full object-cover" />
@@ -11,9 +11,9 @@
             @endif
             <div class="flex flex-col justify-center gap-1 text-start">
                 @if (!empty($user->display_name))
-                    <p class="font-grotesk text-xl font-semibold">{{ $user->display_name }}</p>
+                    <p class="font-grotesk text-md md:text-xl font-semibold">{{ $user->display_name }}</p>
                 @endif
-                <p class="font-grotesk text-md">{{ $user->username }}</p>
+                <p class="font-grotesk text-sm md:text-md">{{ $user->username }}</p>
             </div>
             <div class="rounded bg-[#181c34] px-3 py-1 text-xs font-bold uppercase">
                 <a href="{{ route('profile.settings.edit') }}">
@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <div class="flex flex-row justify-end space-y-4 font-bold uppercase">
+        <div class="flex flex-row md:justify-end justify-center space-y-4 font-bold uppercase">
             <div class="flex flex-col items-center text-center">
                 <span class="text-lg font-bold">{{ $gamesTotal }}</span>
                 <span class="text-xs"class="text-xs">{{ $gamesTotal === 1 ? 'Jogo' : 'Jogos' }}</span>
@@ -35,14 +35,14 @@
         </div>
     </div>
     <x-profileHeader />
-    <div class="font-grotesk mt-10 flex gap-8">
-        <div class="w-2/3">
+    <div class="font-grotesk mt-10 flex flex-col md:flex-row gap-8 md:px-0 px-2">
+        <div class="w-full md:w-2/3">
             <div class="flex items-center justify-between">
                 <span>ATIVIDADE</span>
                 <a class="text-xs hover:underline" href="{{ route('profile.games') }}">VER TUDO</a>
             </div>
             <div class="border-b-1 mb-2 border-gray-400 opacity-30"></div>
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid md:grid-cols-3 grid-cols-2 gap-4">
                 @foreach ($ratings->take(6) as $game)
                     <div class="flex flex-col items-start">
                         <a href="{{ route('games.detail', $game->id) }}">
@@ -60,7 +60,7 @@
                 @endforeach
             </div>
         </div>
-        <aside class="w-1/3">
+        <aside class="w-full md:w-1/3">
             <div class="flex items-center justify-between py-1">
                 <span class="text-xs">AVALIAÇÕES</span>
                 <a class="text-xs hover:underline" href="{{ route('profile.games') }}">{{ $gamesTotal }}</a>

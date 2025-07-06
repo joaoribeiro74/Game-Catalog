@@ -3,12 +3,12 @@
 @section('content')
     <x-profileHeader />
 
-    <div class="font-grotesk">
+    <div class="font-grotesk md:px-0 px-2">
         <div class="mt-10 items-center justify-between">
             <div class="flex items-center justify-between">
-                <span>MINHAS LISTAS</span>
+                <span class="text-md">MINHAS LISTAS</span>
                 <div class="flex flex-row gap-1">
-                    <h4 class="text-xs font-normal uppercase">Só aparecem listas que possuem pelo menos um jogo</h4>
+                    <h4 class="md:text-xs text-[8px] font-normal uppercase">Só aparecem listas que possuem pelo menos um jogo</h4>
                 </div>
             </div>
         </div>
@@ -18,7 +18,7 @@
                 Você ainda não tem nenhuma lista com jogos.
             </div>
         @else
-            <div class="mt-6 grid grid-cols-2 gap-8">
+            <div class="mt-6 grid md:grid-cols-2 grid-cols-1 gap-8">
                 @foreach ($lists as $list)
                     <div>
                         <h3 class="mb-1 text-lg font-bold group-hover:underline">{{ $list->name }}</h3>

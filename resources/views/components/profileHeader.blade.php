@@ -1,4 +1,4 @@
-<div class="font-grotesk mt-10 flex">
+<div class="font-grotesk mt-10 flex md:px-0 px-2">
     <nav class="min-h-[40px] w-full rounded bg-[#181c34] text-center">
         <ul
             class="flex h-full flex-row flex-nowrap items-center justify-center space-x-12 whitespace-nowrap text-gray-400">

@@ -19,7 +19,7 @@ class RatingFactory extends Factory
 
         return [
             'user_id' => User::factory(),
-            'game_id' => $this->faker->numberBetween(100000, 999999),
+            'game_id' => $this->faker->numberBetween(100, 999999),
             'rating' => $this->faker->randomElement($validRatings),
             'liked' => $this->faker->boolean(),
             'review' => $this->faker->optional()->paragraph(),

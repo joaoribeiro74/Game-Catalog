@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="min-h-screen">
+    <div class="min-h-screen md:px-0 px-2">
         <h1 class="mb-4 text-3xl font-bold text-white">{{ $game['name'] }}</h1>
         <div class="mx-auto bg-[#181c34] text-white shadow-md shadow-black">
             <div class="flex flex-col gap-4 md:flex-row">
@@ -102,7 +102,7 @@
             </div>
         </div>
         <form x-data="ratingComponent({ rating: {{ $userRating ?? 0 }}, liked: {{ json_encode($userLiked ?? false) }} })" action="{{ route('games.rating.storeOrUpdate') }}" method="POST"
-            class="mx-auto flex items-center justify-between space-x-4 rounded-xl bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] p-5 text-white shadow-md shadow-black">
+            class="mx-auto flex items-center md:mb-0 mb-10 justify-between space-x-4 rounded-xl bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] p-5 text-white shadow-md shadow-black">
             @csrf
 
             <input type="hidden" name="game_id" value="{{ $game['appid'] }}">
@@ -111,41 +111,41 @@
 
             <div class="flex items-center space-x-1">
                 <template x-for="i in 5" :key="i">
-                    <div class="relative h-8 w-8">
-                        <x-fas-star class="h-8 w-8 text-[#181c34]" />
+                    <div class="relative md:h-8 md:w-8 w-6 h-6">
+                        <x-fas-star class="md:h-8 md:w-8 w-6 h-6 text-[#181c34]" />
 
                         <button type="button" class="absolute inset-0 z-10 h-full w-full"
                             @click="toggleRating(i)"></button>
 
                         <div class="absolute inset-0 flex items-center justify-center">
                             <template x-if="currentRating >= i">
-                                <x-fas-star class="h-8 w-8 text-white" />
+                                <x-fas-star class="md:h-8 md:w-8 w-6 h-6 text-white" />
                             </template>
                             <template x-if="currentRating >= i - 0.5 && currentRating < i">
-                                <x-fas-star-half class="h-8 w-8 text-white" />
+                                <x-fas-star-half class="md:h-8 md:w-8 w-6 h-6 text-white" />
                             </template>
                         </div>
                     </div>
                 </template>
             </div>
 
-            <div class="relative flex items-center space-x-16">
+            <div class="relative flex items-center md:space-x-16">
 
-                <div class="absolute -bottom-5 right-4 translate-y-1/2 rounded-sm bg-[#181c34] p-1">
+                <div class="absolute -bottom-5 md:right-4 right-10 translate-y-1/2 rounded-sm bg-[#181c34] p-1">
                     <button type="submit"
-                        class="font-grotesk cursor-pointer whitespace-nowrap rounded bg-[#1DAA2D] px-8 py-2 font-bold uppercase text-white transition hover:bg-[#00c814]">
+                        class="font-grotesk cursor-pointer whitespace-nowrap rounded md:text-[14px] text-[10px] bg-[#1DAA2D] md:px-8 px-4 py-2 font-bold uppercase text-white transition hover:bg-[#00c814]">
                         {{ $hasRated ? 'Avaliar novamente' : 'Avaliar' }}
                     </button>
                 </div>
 
-                <div class="relative h-8 w-8">
-                    <x-fas-heart class="h-8 w-8" fill="#181c34" />
+                <div class="relative md:h-8 md:w-8 w-6 h-6 ">
+                    <x-fas-heart class="md:h-8 md:w-8 w-6 h-6" fill="#181c34" />
 
                     <button type="button" class="absolute inset-0 z-10 h-full w-full" @click="liked = !liked"></button>
 
                     <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
                         <template x-if="liked">
-                            <x-fas-heart class="h-8 w-8" fill="#E10000" />
+                            <x-fas-heart class="md:h-8 md:w-8 w-6 h-6" fill="#E10000" />
                         </template>
                     </div>
                 </div>

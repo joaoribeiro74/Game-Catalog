@@ -2,17 +2,17 @@
 
 @section('content')
     <x-profileHeader />
-    <div x-data="{ columns: 6 }" class="font-grotesk">
+    <div x-data="{ columns: 6 }" class="font-grotesk px-2 md:px-0">
         <div class="mt-10">
             <div class="flex items-center justify-between">
                 <span>ATIVIDADE</span>
-                <div class="flex flex-row gap-1">
+                <div class="hidden flex-row gap-1 md:flex">
                     <x-fas-th-large class="h-4 w-4 cursor-pointer hover:text-white" @click="columns = 6" />
                     <x-fas-square class="h-4 w-4 cursor-pointer hover:text-white" @click="columns = 4" />
                 </div>
             </div>
             <div class="border-b-1 mb-2 border-gray-400 opacity-30"></div>
-            <div x-bind:class="`grid gap-4 ${columns === 6 ? 'grid-cols-6' : 'grid-cols-4'}`">
+            <div x-bind:class="`grid grid-cols-2 gap-4 ${columns === 6 ? 'md:grid-cols-6' : 'md:grid-cols-4'}`">
                 @foreach ($ratings as $game)
                     <div class="flex flex-col items-start">
                         <a href="{{ route('games.detail', $game->id) }}">
@@ -24,6 +24,12 @@
                                 <x-ratingStars :score="$game->rating" />
                                 @if ($game->liked)
                                     <x-fas-heart class="h-4 w-4 text-[#E10000]" />
+                                @endif
+                            </div>
+
+                            <div class="block text-[10px] font-semibold text-gray-400 md:hidden">
+                                {{ $game->date }} @if ($game->year)
+                                    {{ $game->year }}
                                 @endif
                             </div>
 

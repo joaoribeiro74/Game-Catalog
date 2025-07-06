@@ -1,4 +1,4 @@
-<div class="font-grotesk relative mb-6 flex items-center justify-end rounded text-white">
+<div class="font-grotesk relative mb-6 flex items-center justify-center md:px-0 px-4 md:justify-end rounded text-white">
     <form class="relative flex w-full max-w-md items-center bg-[#181c34] p-1 rounded-t" x-data="searchGames()" @click.away="closeResults()">
         <input type="search" name="q" placeholder="Buscar jogos..." autocomplete="off" x-model="query"
             @input.debounce.300ms="fetchResults()" @keydown.arrow-down.prevent="selectNext()"
@@ -10,7 +10,6 @@
             <x-fas-search class="h-5 w-5" />
         </button>
 
-        <!-- Dropdown dos resultados -->
         <ul x-show="results.length > 0" x-transition
             class="absolute top-full z-50 -ml-1 w-full bg-[#181c34] text-white shadow-md shadow-black">
             <template x-for="(result, index) in results.slice(0, 6)" :key="result.appid">

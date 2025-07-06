@@ -17,7 +17,7 @@ class GameListItemFactory extends Factory
     {
         return [
             'game_list_id' => GameList::factory(),
-            'game_id' => $this->faker->numberBetween(100000, 999999), // ID da Steam
+            'game_id' => $this->faker->numberBetween(100, 999999), // ID da Steam
             'added_at' => $this->faker->dateTimeThisYear(),
         ];
     }

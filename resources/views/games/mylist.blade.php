@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @section('content')
-    <div x-data="{ createOpen: false }" class="font-grotesk container mt-4">
+    <div x-data="{ createOpen: false }" class="font-grotesk container mt-4 md:px-0 px-2">
         <div class="mb-4 flex justify-end">
             <button @click="createOpen = true"
                 class="flex cursor-pointer items-center gap-2 rounded-sm bg-gradient-to-r from-[#2C7CFC] to-[#04BCFC] px-4 py-2 font-bold text-white shadow-sm shadow-black transition">Criar
@@ -99,7 +99,7 @@
                     @if ($list->items->isEmpty())
                         <p>Essa lista está vazia.</p>
                     @else
-                        <ul class="font-grotesk mt-2 grid grid-cols-2 flex-row gap-4 font-bold lg:grid-cols-4">
+                        <ul class="font-grotesk mt-2 grid grid-cols-2 flex-row gap-4 font-bold md:grid-cols-4">
                             @foreach ($list->items as $item)
                                 @if ($item->game_data)
                                     <x-gameListCard :game="$item->game_data" :itemId="$item->id" :listName="$list->name" />
